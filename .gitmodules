@@ -1,0 +1,3 @@
+[submodule "python3-job-type/racetrack"]
+	path = python3-job-type/racetrack
+	url = https://github.com/TheRacetrack/racetrack.git
