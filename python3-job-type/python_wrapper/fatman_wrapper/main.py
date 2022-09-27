@@ -4,7 +4,6 @@ import sys
 from fatman_wrapper.server import run_configured_entrypoint
 from fatman_wrapper.config import Config
 from racetrack_client.log.logs import init_logs, configure_logs
-from racetrack_client.utils.config import load_config
 from racetrack_client.log.logs import get_logger
 
 logger = get_logger(__name__)
@@ -33,7 +32,7 @@ def main():
 def run_entrypoint(args: argparse.Namespace):
     """Load entrypoint class and run it embedded in a HTTP server"""
     init_logs()
-    config: Config = load_config(Config)
+    config = Config()
     configure_logs(log_level=config.log_level)
 
     if args.port:
