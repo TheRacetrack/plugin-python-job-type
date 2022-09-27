@@ -19,11 +19,6 @@ build:
 		-t racetrack/fatman-base/python3:latest \
 		-f base.Dockerfile .
 
-push-public: build
-	docker login ghcr.io
-	docker tag racetrack/fatman-base/python3:latest ghcr.io/theracetrack/racetrack/fatman-base/python3:$(TAG)
-	docker push ghcr.io/theracetrack/racetrack/fatman-base/python3:$(TAG)
-
 push-local: build
 	docker tag racetrack/fatman-base/python3:latest localhost:5000/racetrack/fatman-base/python3:$(TAG)
 	docker push localhost:5000/racetrack/fatman-base/python3:$(TAG)
@@ -33,6 +28,11 @@ push-private: build
 	docker tag racetrack/fatman-base/python3:latest ${REGISTRY}/fatman-base/python3:$(TAG)
 	docker push ${REGISTRY}/fatman-base/python3:$(TAG)
 
+push-public: build
+	docker login ghcr.io
+	docker tag racetrack/fatman-base/python3:latest ghcr.io/theracetrack/racetrack/fatman-base/python3:$(TAG)
+	docker push ghcr.io/theracetrack/racetrack/fatman-base/python3:$(TAG)
+
 # Use it if you want to change the default settings
 env-template:
 	cp -n .env.dist .env
@@ -41,3 +41,5 @@ env-template:
 bundle:
 	cd python3-job-type &&\
 	racetrack-plugin-bundler bundle --plugin-version=${TAG} --out=..
+
+release: push-local push-private push-public bundle
