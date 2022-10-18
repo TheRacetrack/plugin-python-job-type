@@ -22,7 +22,7 @@ test-build:
 
 bundle:
 	cd python3-job-type &&\
-	racetrack-plugin-bundler bundle --plugin-version=${TAG} --out=..
+	racetrack plugin bundle --plugin-version=${TAG} --out=..
 
 init-racetrack-submodule:
 	git submodule update --init --recursive

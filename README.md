@@ -5,10 +5,9 @@ which extends it with Python 3 Job Type.
 It's a language wrapper converting your code written in Python to a Fatman web service.
 
 ## Setup
-1. Make sure you have cloned the racetrack submodule. If not run: `make init-racetrack-submodule`
+1. Make sure you have cloned the racetrack submodule. If not run: `make init`
 
-2. [Install racetrack-plugin-bundler](https://github.com/TheRacetrack/racetrack/blob/master/utils/plugin_bundler/README.md)
-  and generate ZIP plugin by running `make bundle`.
+2. Install `racetrack` client and generate ZIP plugin by running `make bundle`.
 
 3. Activate the plugin in Racetrack Dashboard Admin page
   by uploading the zipped plugin file.
