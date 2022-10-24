@@ -33,72 +33,36 @@ def setup_webview_endpoints(
     # Determine whether webview app is WSGI or ASGI
     sig = signature(webview_app)
     if len(sig.parameters) == 2:
+        webview_app = PathPrefixerWSGIMiddleware(webview_app, webview_base_url)
+        webview_app = WSGIMiddleware(webview_app)
         logger.debug(f'Webview app recognized as a WSGI app')
-       
-        # serve static resources
-        static_path = Path(os.getcwd()) / 'static'
-        if static_path.is_dir():
-            webview_app = SharedDataMiddleware(webview_app, {
-                webview_base_url + '/static': str(static_path)
-            })
-
-        wsgi_app = PathPrefixerWSGIMiddleware(webview_app, webview_base_url)
-        fastapi_app.mount('/api/v1/webview', WSGIMiddleware(wsgi_app))
-        TrailingSlashForwarder.mount_path('/api/v1/webview')
-
-        @api.get('/webview/{path:path}')
-        def _fatman_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
-            """Call custom Webview UI pages"""
-            pass  # just register endpoint in swagger, it's handled by ASGI
-
     else:
         assert len(sig.parameters) == 3, 'ASGI app should have 3 arguments: Scope, Receive, Send'
         logger.debug(f'Webview app recognized as an ASGI app')
 
-        # serve static resources
-        static_path = Path(os.getcwd()) / 'static'
-        if static_path.is_dir():
-            fastapi_app.mount('/api/v1/webview/static', StaticFiles(directory=str(static_path)), name="webview_static")
-            logger.debug(f'Static Webview directory found and mounted at /api/v1/webview/static')
+    # serve static resources
+    static_path = Path(os.getcwd()) / 'static'
+    if static_path.is_dir():
+        fastapi_app.mount('/api/v1/webview/static', StaticFiles(directory=str(static_path)), name="webview_static")
+        logger.debug(f'Static Webview directory found and mounted at /api/v1/webview/static')
 
-        webview_app = mount_at_base_path(webview_app, webview_base_url)
-
-        # @fastapi_app.get('/api/v1/webview')
-        # async def _base_path_redirect(request: Request):
-        #     return RedirectResponse(f"{request.url.path}/")
-
-        # fastapi_app.mount('/api/v1/webview', webview_asgi_app)
-
-        fastapi_app.mount('/api/v1/webview', webview_app)
-
-        # fastapi_app.mount('/api/v1/webview', webview_asgi_app)
-        TrailingSlashForwarder.mount_path(webview_base_url)
+    webview_app = mount_at_base_path(webview_app, webview_base_url)
+    TrailingSlashForwarder.mount_path(webview_base_url)
+    fastapi_app.mount('/api/v1/webview', webview_app)
 
     logger.info(f'Webview app mounted at {webview_base_url}')
 
-    # @api.get('/webview{path:path}')
-    # def _fatman_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
-    #     """Call custom Webview UI pages"""
-    #     pass  # just register endpoint in swagger, it's handled by ASGI
+    @api.get('/webview/{path:path}')
+    def _fatman_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
+        """Call custom Webview UI pages"""
+        pass  # just register endpoint in swagger, it's handled by ASGI
 
 
-def instantiate_webview_app(entrypoint: FatmanEntrypoint, base_url: str) -> Optional[ASGIApp]:
+def instantiate_webview_app(entrypoint: FatmanEntrypoint, base_url: str) -> Optional[Callable]:
     if not hasattr(entrypoint, 'webview_app'):
         return None
     webview_app_function = getattr(entrypoint, 'webview_app')
-    webview_app: Callable = webview_app_function(base_url)
-    if webview_app is None:
-        return None
-
-    # # Determine whether webview app is WSGI or ASGI
-    # sig = signature(webview_app)
-    # if len(sig.parameters) == 2:
-    #     logger.debug(f'Webview app recognized as a WSGI app')
-    #     return WSGIMiddleware(webview_app)
-
-    # assert len(sig.parameters) == 3, 'ASGI app should have 3 arguments: Scope, Receive, Send'
-    # logger.debug(f'Webview app recognized as an ASGI app')
-    return webview_app
+    return webview_app_function(base_url)
 
 
 class PathPrefixerWSGIMiddleware:
