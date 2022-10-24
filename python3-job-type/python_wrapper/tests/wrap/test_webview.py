@@ -1,9 +1,11 @@
 import os
+from typing import List
+from fastapi import FastAPI
 
 from fastapi.testclient import TestClient
 import pytest
+from starlette.routing import Mount
 
-from racetrack_commons.api.asgi.asgi_reloader import ASGIReloader
 from fatman_wrapper.wrapper import create_entrypoint_app
 
 
@@ -20,10 +22,8 @@ def test_requesting_webview_wsgi_pages(revert_workdir):
     os.environ['FATMAN_VERSION'] = '0.0.1'
     api_app = create_entrypoint_app('webview_wsgi_model.py', class_name='FatmanEntrypoint')
 
-    app_reloader = ASGIReloader()
-    app_reloader.mount(api_app)
-
-    client = TestClient(app_reloader)
+    _fix_app_middleware(api_app)
+    client = TestClient(api_app)
 
     response = client.get('/pub/fatman/skynet/0.0.1/api/v1/webview')
     assert response.status_code == 200, 'webview without a slash is forwarded automatically'
@@ -53,9 +53,7 @@ def test_requesting_webview_asgi_pages(revert_workdir):
     os.environ['FATMAN_VERSION'] = '0.0.1'
     api_app = create_entrypoint_app('webview_asgi_model.py', class_name='FatmanEntrypoint')
 
-    api_app.user_middleware = []
-    api_app.middleware_stack = api_app.build_middleware_stack()
-
+    _fix_app_middleware(api_app)
     client = TestClient(api_app)
 
     response = client.get('/pub/fatman/skynet/0.0.1/api/v1/webview')
@@ -79,3 +77,13 @@ def test_requesting_webview_asgi_pages(revert_workdir):
     assert response.status_code == 200
     content = response.text
     assert 'background-color' in content, 'static resources are served'
+
+
+def _fix_app_middleware(api_app: FastAPI):
+    # A fix for https://github.com/encode/starlette/issues/472
+    api_app.user_middleware = []
+    api_app.middleware_stack = api_app.build_middleware_stack()
+    mounts: List[Mount] = [r for r in api_app.router.routes if isinstance(r, Mount)]
+    for mount in mounts:
+        mount.app.user_middleware = []
+        mount.app.middleware_stack = mount.app.build_middleware_stack()

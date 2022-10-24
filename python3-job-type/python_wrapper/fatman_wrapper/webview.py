@@ -56,23 +56,12 @@ def setup_webview_endpoints(
         logger.debug(f'Webview app recognized as an ASGI app')
 
         # serve static resources
-        # static_path = Path(os.getcwd()) / 'static'
-        # if static_path.is_dir():
-        #     fastapi_app.mount('/api/v1/webview/static', StaticFiles(directory=str(static_path)), name="webview_static")
-        #     logger.debug(f'Static Webview directory found and mounted at /api/v1/webview/static')
+        static_path = Path(os.getcwd()) / 'static'
+        if static_path.is_dir():
+            fastapi_app.mount('/api/v1/webview/static', StaticFiles(directory=str(static_path)), name="webview_static")
+            logger.debug(f'Static Webview directory found and mounted at /api/v1/webview/static')
 
         webview_app = mount_at_base_path(webview_app, webview_base_url)
-
-        # webview_asgi_app = FastAPI()
-        # @webview_asgi_app.get('/api/v1/webview/')
-        # async def index2(request: Request):
-        #     return {'dupa': 1}
-        # @webview_asgi_app.get('/')
-        # async def index2(request: Request):
-        #     return {'dupa': 2}
-        # @webview_asgi_app.get(webview_base_url)
-        # async def index2(request: Request):
-        #     return {'dupa': 3}
 
         # @fastapi_app.get('/api/v1/webview')
         # async def _base_path_redirect(request: Request):
