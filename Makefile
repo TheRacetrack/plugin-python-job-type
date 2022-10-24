@@ -1,6 +1,6 @@
 .PHONY: setup test
 
-TAG ?= 2.4.0
+TAG ?= 2.5.0
 
 init: init-racetrack-submodule setup
 

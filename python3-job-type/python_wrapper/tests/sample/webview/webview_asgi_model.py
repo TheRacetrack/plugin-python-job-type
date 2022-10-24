@@ -1,14 +1,10 @@
-from typing import List
-
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 
 class FatmanEntrypoint:
-    def perform(self, numbers: List[float]) -> float:
-        """Return sum of given numbers"""
-        return sum(numbers)
+    def perform(self):
+        pass
 
     def webview_app(self, base_url: str):
         """
