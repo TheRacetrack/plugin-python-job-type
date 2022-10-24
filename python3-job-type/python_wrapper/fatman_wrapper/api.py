@@ -94,6 +94,10 @@ def create_api_app(
             'fatman_version': fatman_version,
         })
 
+    fastapi_app.user_middleware = []
+    fastapi_app.middleware_stack = fastapi_app.build_middleware_stack()
+
+
     return mount_at_base_path(fastapi_app, '/pub/fatman/{fatman_name}/{version}')
 
 
