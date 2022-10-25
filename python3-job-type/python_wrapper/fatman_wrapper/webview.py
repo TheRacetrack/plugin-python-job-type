@@ -4,12 +4,9 @@ from pathlib import Path
 from inspect import signature
 
 import fastapi
-from fastapi import APIRouter, FastAPI, Request
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, FastAPI
 from fastapi.staticfiles import StaticFiles
 from a2wsgi import WSGIMiddleware
-from a2wsgi.types import ASGIApp, WSGIApp
-from werkzeug.middleware.shared_data import SharedDataMiddleware
 
 from racetrack_commons.api.asgi.proxy import TrailingSlashForwarder, mount_at_base_path
 from racetrack_client.log.logs import get_logger
