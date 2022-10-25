@@ -5,8 +5,7 @@ setup:
 	python setup.py develop
 
 test:
-	cd tests && python -m coverage run --source=fatman_wrapper -m pytest -vv --tb=short -ra $(test) &&\
-	python -m coverage report --show-missing --skip-empty --skip-covered
+	cd tests && python -m pytest -vv --tb=short -ra $(test)
 
 # Run local server wrapping sample model (outside docker)
 run:

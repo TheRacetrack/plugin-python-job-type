@@ -1,4 +1,6 @@
-TAG ?= 2.4.0
+.PHONY: setup test
+
+TAG ?= 2.5.0
 
 init: init-racetrack-submodule setup
 
@@ -13,6 +15,9 @@ setup:
 	( cd racetrack/utils/plugin_bundler && make setup )
 	@echo Activate your venv:
 	@echo . venv/bin/activate
+
+test:
+	(cd python3-job-type/python_wrapper && make test)
 
 test-build:
 	cd python3-job-type &&\

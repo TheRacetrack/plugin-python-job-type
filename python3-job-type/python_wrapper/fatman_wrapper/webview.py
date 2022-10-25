@@ -1,14 +1,21 @@
 from typing import Optional, Callable
 import os
 from pathlib import Path
+from inspect import signature
 
 import fastapi
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, Request
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from a2wsgi import WSGIMiddleware
+from a2wsgi.types import ASGIApp, WSGIApp
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 
+from racetrack_commons.api.asgi.proxy import TrailingSlashForwarder, mount_at_base_path
+from racetrack_client.log.logs import get_logger
 from fatman_wrapper.entrypoint import FatmanEntrypoint
-from racetrack_commons.api.asgi.proxy import TrailingSlashForwarder
+
+logger = get_logger(__name__)
 
 
 def setup_webview_endpoints(
@@ -19,13 +26,31 @@ def setup_webview_endpoints(
 ):
     webview_base_url = base_url + '/api/v1/webview'
 
-    webview_wsgi_app = instantiate_webview_app(entrypoint, webview_base_url)
-    if webview_wsgi_app is None:
+    webview_app = instantiate_webview_app(entrypoint, webview_base_url)
+    if webview_app is None:
         return
 
-    wsgi_app = PathPrefixerMiddleware(webview_wsgi_app, webview_base_url)
-    fastapi_app.mount('/api/v1/webview', WSGIMiddleware(wsgi_app))
-    TrailingSlashForwarder.mount_path('/api/v1/webview')
+    # Determine whether webview app is WSGI or ASGI
+    sig = signature(webview_app)
+    if len(sig.parameters) == 2:
+        webview_app = PathPrefixerWSGIMiddleware(webview_app, webview_base_url)
+        webview_app = WSGIMiddleware(webview_app)
+        logger.debug(f'Webview app recognized as a WSGI app')
+    else:
+        assert len(sig.parameters) == 3, 'ASGI app should have 3 arguments: Scope, Receive, Send'
+        logger.debug(f'Webview app recognized as an ASGI app')
+
+    # serve static resources
+    static_path = Path(os.getcwd()) / 'static'
+    if static_path.is_dir():
+        fastapi_app.mount('/api/v1/webview/static', StaticFiles(directory=str(static_path)), name="webview_static")
+        logger.debug(f'Static Webview directory found and mounted at /api/v1/webview/static')
+
+    webview_app = mount_at_base_path(webview_app, webview_base_url)
+    TrailingSlashForwarder.mount_path(webview_base_url)
+    fastapi_app.mount('/api/v1/webview', webview_app)
+
+    logger.info(f'Webview app mounted at {webview_base_url}')
 
     @api.get('/webview/{path:path}')
     def _fatman_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
@@ -37,21 +62,10 @@ def instantiate_webview_app(entrypoint: FatmanEntrypoint, base_url: str) -> Opti
     if not hasattr(entrypoint, 'webview_app'):
         return None
     webview_app_function = getattr(entrypoint, 'webview_app')
-    wsgi_app = webview_app_function(base_url)
-    if wsgi_app is None:
-        return None
-
-    # serve static resources
-    static_path = Path(os.getcwd()) / 'static'
-    if static_path.is_dir():
-        wsgi_app = SharedDataMiddleware(wsgi_app, {
-            base_url + '/static': str(static_path)
-        })
-
-    return wsgi_app
+    return webview_app_function(base_url)
 
 
-class PathPrefixerMiddleware:
+class PathPrefixerWSGIMiddleware:
     def __init__(self, app, base_path: str):
         self.app = app
         self.base_path = base_path
