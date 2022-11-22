@@ -1,7 +1,5 @@
 .PHONY: setup test
 
-TAG ?= 2.5.0
-
 init: init-racetrack-submodule setup
 
 setup:
@@ -27,7 +25,7 @@ test-build:
 
 bundle:
 	cd python3-job-type &&\
-	racetrack plugin bundle --plugin-version=${TAG} --out=..
+	racetrack plugin bundle --out=..
 
 init-racetrack-submodule:
 	git submodule update --init --recursive

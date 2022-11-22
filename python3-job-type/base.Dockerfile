@@ -1,5 +1,13 @@
 FROM python:3.9-slim-bullseye
 
+RUN apt-get update -y && apt-get install -y \
+    build-essential \
+    git \
+    curl \
+    dnsutils \
+    vim &&\
+    rm -rf /var/lib/apt/lists/*
+# apt cache is cleaned automatically, see /etc/apt/apt.conf.d/docker-clean
 WORKDIR /src/fatman
 
 COPY racetrack/racetrack_client/setup.py racetrack/racetrack_client/requirements.txt racetrack/racetrack_client/README.md /src/racetrack_client/
