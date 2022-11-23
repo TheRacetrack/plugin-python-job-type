@@ -9,8 +9,7 @@ setup:
 	cd python3-job-type &&\
 	( cd python_wrapper && make setup ) &&\
 	( cd racetrack/racetrack_client && make setup ) &&\
-	( cd racetrack/racetrack_commons && make setup ) &&\
-	( cd racetrack/utils/plugin_bundler && make setup )
+	( cd racetrack/racetrack_commons && make setup )
 	@echo Activate your venv:
 	@echo . venv/bin/activate
 
