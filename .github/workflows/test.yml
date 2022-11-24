@@ -17,3 +17,20 @@ jobs:
       - name: Install dependencies
         run: make init
       - run: . venv/bin/activate && make test
+
+  test-build-base-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build base Docker image
+        run: make init-racetrack-submodule test-build-base
+
+      - name: Collect docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2.2.0
+        with:
+          tail: '1000'

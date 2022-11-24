@@ -16,7 +16,7 @@ setup:
 test:
 	(cd python3-job-type/python_wrapper && make test)
 
-test-build:
+test-build-base:
 	cd python3-job-type &&\
 	DOCKER_BUILDKIT=1 docker build \
 		-t racetrack/fatman-base/python3:latest \
