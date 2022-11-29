@@ -32,6 +32,12 @@ def instantiate_class_entrypoint(entrypoint_path: str, class_name: Optional[str]
     """
     sys.path.append(os.getcwd())
 
+    venv_path = Path('../fat-venv/lib/python/site-packages')
+    if venv_path.is_dir():
+        venv_sys_path = venv_path.resolve().absolute().as_posix()
+        sys.path.insert(1, venv_sys_path)
+        logger.debug(f'Activated Fatman\'s venv: {venv_sys_path}')
+
     assert Path(entrypoint_path).is_file(), f'{entrypoint_path} file not found'
     spec = importlib.util.spec_from_file_location("fatman", entrypoint_path)
     ext_module = importlib.util.module_from_spec(spec)
