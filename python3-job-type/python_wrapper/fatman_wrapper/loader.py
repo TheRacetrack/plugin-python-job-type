@@ -35,6 +35,7 @@ def instantiate_class_entrypoint(entrypoint_path: str, class_name: Optional[str]
     venv_path = os.environ.get('VENV_PACKAGES_PATH')
     if venv_path and Path(venv_path).is_dir():
         venv_sys_path = Path(venv_path).resolve().absolute().as_posix()
+        # At position 0 there should be a working directory, so local modules takes precedence over site-packages
         sys.path.insert(1, venv_sys_path)
         logger.debug(f'Activated Fatman\'s venv: {venv_sys_path}')
 
