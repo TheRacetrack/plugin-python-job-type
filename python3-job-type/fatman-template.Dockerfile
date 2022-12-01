@@ -11,7 +11,9 @@ RUN mkdir -p /usr/share/man/man1 && apt-get update -y && apt-get install -y \
 
 {% if manifest.python.requirements_path %}
 COPY "{{ manifest.python.requirements_path }}" /src/fatman/
-RUN cd /src/fatman/ && pip install -r "{{ manifest.python.requirements_path }}"
+RUN . /src/fat-venv/bin/activate &&\
+    cd /src/fatman/ &&\
+    pip install -r "{{ manifest.python.requirements_path }}"
 {% endif %}
 
 COPY . /src/fatman/
@@ -22,3 +24,4 @@ ENV FATMAN_NAME "{{ manifest.name }}"
 ENV FATMAN_VERSION "{{ manifest.version }}"
 ENV GIT_VERSION "{{ git_version }}"
 ENV DEPLOYED_BY_RACETRACK_VERSION "{{ deployed_by_racetrack_version }}"
+ENV JOB_TYPE_VERSION "{{ job_type_version }}"

@@ -72,6 +72,7 @@ class HealthState:
             'git_version': os.environ.get('GIT_VERSION'),
             'deployed_by_racetrack_version': os.environ.get('DEPLOYED_BY_RACETRACK_VERSION'),
             'deployment_timestamp': os.environ.get('FATMAN_DEPLOYMENT_TIMESTAMP'),
+            'job_type_version': os.environ.get('JOB_TYPE_VERSION'),
         }
         return result, 200 if self.live and self.ready else 500
 

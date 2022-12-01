@@ -24,5 +24,10 @@ RUN cd /src/racetrack_client && python setup.py develop &&\
   cd /src/racetrack_commons && python setup.py develop &&\
   cd /src/python_wrapper && python setup.py develop
 
+RUN python -m venv /src/fat-venv &&\
+	. /src/fat-venv/bin/activate &&\
+	pip install --upgrade pip setuptools
+
 ENV PYTHONPATH "/src/fatman/"
+ENV VENV_PACKAGES_PATH "/src/fat-venv/lib/python3.9/site-packages"
 LABEL racetrack-component="fatman"
