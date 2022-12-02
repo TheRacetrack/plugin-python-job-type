@@ -18,6 +18,9 @@ You can deploy sample Python3 job by running:
 racetrack deploy sample/python-class <RACETRACK_URL>
 ```
 
+# Changelog
+Check out [Changelog](./docs/CHANGELOG.md) to find out about notable changes.
+
 # Development
 Setup & activate Python venv (this is required for local development):
 
