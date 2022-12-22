@@ -7,21 +7,9 @@ from pathlib import Path
 from typing import Type, Optional
 
 from fatman_wrapper.entrypoint import FatmanEntrypoint
-from fatman_wrapper.forward import instantiate_host_entrypoint
 from racetrack_client.log.logs import get_logger
 
 logger = get_logger(__name__)
-
-
-def instantiate_entrypoint(
-        model_path: str,
-        class_name: Optional[str] = None,
-        entrypoint_hostname: Optional[str] = None,
-) -> FatmanEntrypoint:
-    if entrypoint_hostname:
-        return instantiate_host_entrypoint(entrypoint_hostname)
-    else:
-        return instantiate_class_entrypoint(model_path, class_name)
 
 
 def instantiate_class_entrypoint(entrypoint_path: str, class_name: Optional[str]) -> FatmanEntrypoint:

@@ -1,8 +1,4 @@
 -/python_wrapper/tests
--/racetrack
-+/racetrack/racetrack_client
--/racetrack/racetrack_client/tests
-+/racetrack/racetrack_commons
 
 -__pycache__
 -*.pyc
@@ -13,4 +9,5 @@
 
 -Makefile
 -LICENSE
+-README.md
 -requirements-dev.txt

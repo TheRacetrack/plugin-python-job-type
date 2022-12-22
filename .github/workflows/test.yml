@@ -15,7 +15,7 @@ jobs:
           python-version: '3.8'
 
       - name: Install dependencies
-        run: make init
+        run: make setup
       - run: . venv/bin/activate && make test
 
   test-build-base-image:
@@ -27,7 +27,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build base Docker image
-        run: make init-racetrack-submodule test-build-base
+        run: make test-build-base
 
       - name: Collect docker logs on failure
         if: failure()

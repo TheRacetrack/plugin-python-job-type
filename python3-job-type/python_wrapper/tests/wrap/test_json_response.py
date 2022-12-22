@@ -5,8 +5,6 @@ from fastapi.testclient import TestClient
 from fatman_wrapper.api import create_api_app
 from fatman_wrapper.health import HealthState
 from fatman_wrapper.wrapper import create_entrypoint_app
-from racetrack_client.manifest.manifest import GitManifest, Manifest, ResourcesManifest
-from racetrack_client.utils.datamodel import remove_none
 from racetrack_client.utils.quantity import Quantity
 
 
@@ -51,21 +49,6 @@ def test_serialize_quantity():
                 {
                     'quantity': Quantity('1000m'),
                 },
-                Manifest(
-                    name='test',
-                    owner_email='nobody',
-                    git=GitManifest(
-                        remote='url',
-                        directory='.',
-                    ),
-                    resources=ResourcesManifest(
-                        memory_min=Quantity('1Gi'),
-                    ),
-                    image_type='docker',
-                    lang='python3',
-                    replicas=1,
-                    version='0.0.1',
-                ),
             ]
 
     entrypoint = TestEntrypoint()
@@ -80,18 +63,3 @@ def test_serialize_quantity():
         '100Mi',
         {'quantity': '1000m'},
     ]
-    assert remove_none(response.json()[2]) == {
-        'name': 'test',
-        'owner_email': 'nobody',
-        'git': {
-            'remote': 'url',
-            'directory': '.',
-        },
-        'resources': {
-            'memory_min': '1Gi',
-        },
-        'image_type': 'docker',
-        'lang': 'python3',
-        'replicas': 1,
-        'version': '0.0.1',
-    }

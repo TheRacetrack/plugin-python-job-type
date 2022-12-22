@@ -5,7 +5,6 @@ from multiprocessing import Process
 import backoff
 from fastapi.testclient import TestClient
 
-from fatman_wrapper.config import Config
 from fatman_wrapper.health import HealthState
 from fatman_wrapper.loader import instantiate_class_entrypoint
 from fatman_wrapper.main import run_configured_entrypoint
@@ -76,10 +75,9 @@ def test_ready_but_not_live():
 
 def test_bootstrap_server():
     port = free_tcp_port()
-    config = Config(http_port=port)
 
     def target():
-        run_configured_entrypoint(config, 'sample/adder_model.py')
+        run_configured_entrypoint(port, 'sample/adder_model.py')
 
     server_process = Process(target=target)
     try:
@@ -101,10 +99,9 @@ def test_bootstrap_server():
 
 def test_survive_syntax_error():
     port = free_tcp_port()
-    config = Config(http_port=port)
 
     def target():
-        run_configured_entrypoint(config, 'sample/faulty_syntax.py')
+        run_configured_entrypoint(port, 'sample/faulty_syntax.py')
 
     server_process = Process(target=target)
     try:
@@ -123,10 +120,9 @@ def test_survive_syntax_error():
 
 def test_survive_module_error():
     port = free_tcp_port()
-    config = Config(http_port=port)
 
     def target():
-        run_configured_entrypoint(config, 'sample/faulty_import.py')
+        run_configured_entrypoint(port, 'sample/faulty_import.py')
 
     server_process = Process(target=target)
     try:
