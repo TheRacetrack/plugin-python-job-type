@@ -16,7 +16,8 @@ You can deploy sample Python3 job by running:
 racetrack deploy sample/python-class <RACETRACK_URL>
 ```
 
-# Changelog
+See [how to use Python job type](./docs/job_python3.md).
+
 Check out [Changelog](./docs/CHANGELOG.md) to find out about notable changes.
 
 # Development
