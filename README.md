@@ -13,7 +13,7 @@ It's a language wrapper converting your code written in Python to a Fatman web s
 ## Usage
 You can deploy sample Python3 job by running:
 ```bash
-racetrack deploy sample/python-class <RACETRACK_URL>
+racetrack deploy sample/python-class
 ```
 
 See [how to use Python job type](./docs/job_python3.md).
