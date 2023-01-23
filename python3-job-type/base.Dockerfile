@@ -26,6 +26,6 @@ RUN python -m venv /src/fat-venv &&\
 	. /src/fat-venv/bin/activate &&\
 	pip install --upgrade pip setuptools
 
-ENV PYTHONPATH "/src/fatman/:/src/python_wrapper:/usr/local/lib/python3.9/site-packages:/src/fat-venv/lib/python3.9/site-packages"
+ENV PYTHONPATH "/src/fatman/:/src/python_wrapper:/usr/local/lib/python39.zip:/usr/local/lib/python3.9:/usr/local/lib/python3.9/site-packages:/src/fat-venv/lib/python3.9/site-packages"
 ENV VENV_PACKAGES_PATH "/src/fat-venv/lib/python3.9/site-packages"
 LABEL racetrack-component="fatman"

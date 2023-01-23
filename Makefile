@@ -20,3 +20,6 @@ test-build-base:
 bundle:
 	cd python3-job-type &&\
 	racetrack plugin bundle --out=..
+
+install:
+	racetrack plugin install *.zip
