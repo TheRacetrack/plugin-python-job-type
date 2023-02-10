@@ -1,11 +1,11 @@
 import inspect
 from typing import Optional, Any, Dict
 
-from fatman_wrapper.entrypoint import FatmanEntrypoint
+from job_wrapper.entrypoint import JobEntrypoint
 
 
-def get_input_example(entrypoint: FatmanEntrypoint, endpoint: str = '/perform') -> Dict[str, Any]:
-    """Return exemplary input for a Fatman endpoint (/perform endpoint or auxiliary endpoint)"""
+def get_input_example(entrypoint: JobEntrypoint, endpoint: str = '/perform') -> Dict[str, Any]:
+    """Return exemplary input for a Job endpoint (/perform endpoint or auxiliary endpoint)"""
     if hasattr(entrypoint, 'docs_input_examples'):
         docs_input_examples = getattr(entrypoint, 'docs_input_examples')()
         if not isinstance(docs_input_examples, dict):
@@ -17,7 +17,7 @@ def get_input_example(entrypoint: FatmanEntrypoint, endpoint: str = '/perform') 
     return {}
 
 
-def get_perform_docs(entrypoint: FatmanEntrypoint) -> Optional[str]:
+def get_perform_docs(entrypoint: JobEntrypoint) -> Optional[str]:
     """Return docstring attached to a perform function"""
     if hasattr(entrypoint, 'perform'):
         perform_func = getattr(entrypoint, 'perform')

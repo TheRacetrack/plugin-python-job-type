@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 import pytest
 from starlette.routing import Mount
 
-from fatman_wrapper.wrapper import create_entrypoint_app
+from job_wrapper.wrapper import create_entrypoint_app
 
 
 @pytest.fixture(scope="function")
@@ -18,9 +18,9 @@ def revert_workdir():
 
 def test_requesting_webview_wsgi_pages(revert_workdir):
     os.chdir('sample/webview')
-    os.environ['FATMAN_NAME'] = 'skynet'
-    os.environ['FATMAN_VERSION'] = '0.0.1'
-    api_app = create_entrypoint_app('webview_wsgi_model.py', class_name='FatmanEntrypoint')
+    os.environ['JOB_NAME'] = 'skynet'
+    os.environ['JOB_VERSION'] = '0.0.1'
+    api_app = create_entrypoint_app('webview_wsgi_model.py', class_name='JobEntrypoint')
 
     _fix_app_middleware(api_app)
     client = TestClient(api_app)
@@ -49,9 +49,9 @@ def test_requesting_webview_wsgi_pages(revert_workdir):
 
 def test_requesting_webview_asgi_pages(revert_workdir):
     os.chdir('sample/webview')
-    os.environ['FATMAN_NAME'] = 'skynet'
-    os.environ['FATMAN_VERSION'] = '0.0.1'
-    api_app = create_entrypoint_app('webview_asgi_model.py', class_name='FatmanEntrypoint')
+    os.environ['JOB_NAME'] = 'skynet'
+    os.environ['JOB_VERSION'] = '0.0.1'
+    api_app = create_entrypoint_app('webview_asgi_model.py', class_name='JobEntrypoint')
 
     _fix_app_middleware(api_app)
     client = TestClient(api_app)

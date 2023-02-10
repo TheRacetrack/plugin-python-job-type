@@ -2,7 +2,7 @@
 
 This is a plugin for [Racetrack](https://github.com/TheRacetrack/racetrack)
 which extends it with Python 3 Job Type.
-It's a language wrapper converting your code written in Python to a Fatman web service.
+It's a language wrapper converting your code written in Python to a Job web service.
 
 ## Setup
 1. Install `racetrack` client and generate ZIP plugin by running `make bundle`.

@@ -1,4 +1,4 @@
-from fatman_wrapper.wrapper import create_entrypoint_app
+from job_wrapper.wrapper import create_entrypoint_app
 from fastapi.testclient import TestClient
 
 

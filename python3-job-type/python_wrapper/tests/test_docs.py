@@ -1,9 +1,9 @@
 from typing import Dict, Callable, Any, List
 
-from fatman_wrapper.docs import get_input_example, get_perform_docs
-from fatman_wrapper.entrypoint import FatmanEntrypoint
-from fatman_wrapper.loader import instantiate_class_entrypoint
-from fatman_wrapper.validate import validate_entrypoint
+from job_wrapper.docs import get_input_example, get_perform_docs
+from job_wrapper.entrypoint import JobEntrypoint
+from job_wrapper.loader import instantiate_class_entrypoint
+from job_wrapper.validate import validate_entrypoint
 
 
 def test_input_example():
@@ -25,7 +25,7 @@ def test_perform_docs():
 
 
 def test_input_example_of_auxiliary_endpoint():
-    class TestAuxEntrypoint(FatmanEntrypoint):
+    class TestAuxEntrypoint(JobEntrypoint):
         def perform(self, numbers: List[float]):
             return sum(numbers)
 

@@ -14,7 +14,7 @@ test:
 test-build-base:
 	cd python3-job-type &&\
 	DOCKER_BUILDKIT=1 docker build \
-		-t racetrack/fatman-base/python3:latest \
+		-t racetrack/job-base/python3:latest \
 		-f base.Dockerfile .
 
 bundle:

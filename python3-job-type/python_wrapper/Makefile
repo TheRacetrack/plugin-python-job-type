@@ -13,5 +13,5 @@ test:
 
 # Run local server wrapping sample model (outside docker)
 run:
-	FATMAN_NAME=adder FATMAN_VERSION=0.0.1 \
-	fatman_wrapper run tests/sample/adder_model.py
+	JOB_NAME=adder JOB_VERSION=0.0.1 \
+	job_wrapper run tests/sample/adder_model.py

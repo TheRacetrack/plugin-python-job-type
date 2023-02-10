@@ -11,7 +11,7 @@ WsgiApplication = Callable[
 ]
 
 
-class FatmanEntrypoint(ABC):
+class JobEntrypoint(ABC):
     @abstractmethod
     def perform(self, **kwargs):
         """Call model/service main action"""
@@ -25,7 +25,7 @@ class FatmanEntrypoint(ABC):
         return None
 
     def docs_input_examples(self) -> Dict[str, Dict[str, Any]]:
-        """Return mapping of Fatman's endpoints to corresponding exemplary inputs."""
+        """Return mapping of Job's endpoints to corresponding exemplary inputs."""
         return {}
 
     def docs_input_example(self) -> Dict[str, Any]:
@@ -49,8 +49,8 @@ class FatmanEntrypoint(ABC):
         :return list of metric dicts, eg:
             [
                 {
-                    'name': 'fatman_is_crazy',
-                    'description': 'Whether your fatman is crazy or not',
+                    'name': 'job_is_crazy',
+                    'description': 'Whether your job is crazy or not',
                     'value': 1,
                     'labels': {
                         'color': 'blue',
@@ -61,7 +61,7 @@ class FatmanEntrypoint(ABC):
         return []
 
 
-def perform_entrypoint(entrypoint: FatmanEntrypoint, payload: Dict[str, Any]) -> Dict:
+def perform_entrypoint(entrypoint: JobEntrypoint, payload: Dict[str, Any]) -> Dict:
     """Call model/service main action"""
     if entrypoint is None:
         raise ValueError('undefined entrypoint')
@@ -76,7 +76,7 @@ def perform_entrypoint(entrypoint: FatmanEntrypoint, payload: Dict[str, Any]) ->
     return output
 
 
-def list_entrypoint_parameters(entrypoint: FatmanEntrypoint) -> List[Dict]:
+def list_entrypoint_parameters(entrypoint: JobEntrypoint) -> List[Dict]:
     """Inspect entrypoint function and return names, default values, types of all function's parameters"""
     if not hasattr(entrypoint, 'perform'):
         raise ValueError("entrypoint doesn't have 'perform' method implemented")
@@ -150,13 +150,13 @@ def _get_arg_type(annotations: Dict, arg: str) -> Optional[str]:
     return str(type_annotation)
 
 
-def list_auxiliary_endpoints(entrypoint: FatmanEntrypoint) -> Dict[str, Callable]:
+def list_auxiliary_endpoints(entrypoint: JobEntrypoint) -> Dict[str, Callable]:
     if not hasattr(entrypoint, 'auxiliary_endpoints'):
         return {}
     return getattr(entrypoint, 'auxiliary_endpoints')()
 
 
-def list_static_endpoints(entrypoint: FatmanEntrypoint) -> Dict[str, Union[Tuple, str]]:
+def list_static_endpoints(entrypoint: JobEntrypoint) -> Dict[str, Union[Tuple, str]]:
     if not hasattr(entrypoint, 'static_endpoints'):
         return {}
     return getattr(entrypoint, 'static_endpoints')()

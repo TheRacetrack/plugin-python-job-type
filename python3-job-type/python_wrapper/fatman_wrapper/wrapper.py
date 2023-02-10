@@ -1,10 +1,10 @@
 from typing import Optional
 from fastapi import FastAPI
 
-from fatman_wrapper.api import create_api_app
-from fatman_wrapper.health import HealthState
-from fatman_wrapper.loader import instantiate_class_entrypoint
-from fatman_wrapper.validate import validate_entrypoint
+from job_wrapper.api import create_api_app
+from job_wrapper.health import HealthState
+from job_wrapper.loader import instantiate_class_entrypoint
+from job_wrapper.validate import validate_entrypoint
 
 
 def create_entrypoint_app(

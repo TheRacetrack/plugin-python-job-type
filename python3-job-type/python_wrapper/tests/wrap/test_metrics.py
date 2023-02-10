@@ -1,13 +1,13 @@
 from fastapi.testclient import TestClient
 
-from fatman_wrapper.health import HealthState
-from fatman_wrapper.loader import instantiate_class_entrypoint
-from fatman_wrapper.metrics import metric_requests_started
-from fatman_wrapper.wrapper import create_api_app
+from job_wrapper.health import HealthState
+from job_wrapper.loader import instantiate_class_entrypoint
+from job_wrapper.metrics import metric_requests_started
+from job_wrapper.wrapper import create_api_app
 
 
 def test_metrics_endpoint():
-    model = instantiate_class_entrypoint('sample/metrics_fatman.py', None)
+    model = instantiate_class_entrypoint('sample/metrics_job.py', None)
     api_app = create_api_app(model, HealthState(live=True, ready=True))
 
     client = TestClient(api_app)
@@ -24,11 +24,11 @@ def test_metrics_endpoint():
     metric_lines = data.splitlines()
     assert f'requests_started_total {requests_total_before+1}' in metric_lines
 
-    assert '# HELP fatman_wasted_seconds Seconds you have wasted here' in metric_lines
-    assert 'fatman_wasted_seconds 1.2' in metric_lines
-    assert '# HELP fatman_positives Number of positive results' in metric_lines
-    assert 'fatman_positives{color="blue"} 5.0' in metric_lines
+    assert '# HELP job_wasted_seconds Seconds you have wasted here' in metric_lines
+    assert 'job_wasted_seconds 1.2' in metric_lines
+    assert '# HELP job_positives Number of positive results' in metric_lines
+    assert 'job_positives{color="blue"} 5.0' in metric_lines
 
-    assert 'fatman_zero_value 0.0' in metric_lines, 'zero value metric should be present'
+    assert 'job_zero_value 0.0' in metric_lines, 'zero value metric should be present'
 
-    assert 'fatman_null_value' not in metric_lines, 'null value metric is absent'
+    assert 'job_null_value' not in metric_lines, 'null value metric is absent'

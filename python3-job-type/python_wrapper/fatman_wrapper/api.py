@@ -8,17 +8,17 @@ from contextvars import ContextVar
 
 from fastapi import Body, FastAPI, APIRouter, Request, Response
 
-from fatman_wrapper.webview import setup_webview_endpoints
-from fatman_wrapper.docs import get_input_example, get_perform_docs
-from fatman_wrapper.entrypoint import (
-    FatmanEntrypoint,
+from job_wrapper.webview import setup_webview_endpoints
+from job_wrapper.docs import get_input_example, get_perform_docs
+from job_wrapper.entrypoint import (
+    JobEntrypoint,
     perform_entrypoint,
     list_entrypoint_parameters,
     list_auxiliary_endpoints,
     list_static_endpoints,
 )
-from fatman_wrapper.health import setup_health_endpoints, HealthState
-from fatman_wrapper.metrics import (
+from job_wrapper.health import setup_health_endpoints, HealthState
+from job_wrapper.metrics import (
     metric_request_duration,
     metric_request_internal_errors,
     metric_requests_started,
@@ -27,7 +27,7 @@ from fatman_wrapper.metrics import (
     metric_last_call_timestamp,
     setup_entrypoint_metrics,
 )
-from fatman_wrapper.response import register_fatman_json_encoder
+from job_wrapper.response import register_job_json_encoder
 from racetrack_client.log.logs import get_logger
 from racetrack_commons.api.asgi.fastapi import create_fastapi
 from racetrack_commons.api.asgi.proxy import mount_at_base_path
@@ -40,46 +40,46 @@ logger = get_logger(__name__)
 
 def create_health_app(health_state: HealthState) -> FastAPI:
     """
-    Create temporary app serving liveness & readiness endpoints until the actual Fatman entrypoint loads up.
+    Create temporary app serving liveness & readiness endpoints until the actual Job entrypoint loads up.
     """
-    fatman_name = os.environ.get('FATMAN_NAME', '')
-    fatman_version = os.environ.get('FATMAN_VERSION')
-    base_url = f'/pub/fatman/{fatman_name}/{fatman_version}'
+    job_name = os.environ.get('JOB_NAME', '')
+    job_version = os.environ.get('JOB_VERSION')
+    base_url = f'/pub/fatman/{job_name}/{job_version}'
 
     fastapi_app = create_fastapi(
-        title=f'Fatman - {fatman_name}',
-        description='Fatman Module wrapped in a REST server',
+        title=f'Job - {job_name}',
+        description='Job Module wrapped in a REST server',
         base_url=base_url,
-        version=fatman_version,
+        version=job_version,
         request_access_log=True,
     )
 
-    setup_health_endpoints(fastapi_app, health_state, fatman_name)
+    setup_health_endpoints(fastapi_app, health_state, job_name)
 
-    return mount_at_base_path(fastapi_app, '/pub/fatman/{fatman_name}/{version}')
+    return mount_at_base_path(fastapi_app, '/pub/fatman/{job_name}/{version}')
 
 
 def create_api_app(
-    entrypoint: FatmanEntrypoint,
+    entrypoint: JobEntrypoint,
     health_state: HealthState,
 ) -> FastAPI:
     """Create FastAPI app and register all endpoints without running a server"""
-    fatman_name = os.environ.get('FATMAN_NAME', '')
-    fatman_version = os.environ.get('FATMAN_VERSION')
-    base_url = f'/pub/fatman/{fatman_name}/{fatman_version}'
+    job_name = os.environ.get('JOB_NAME', '')
+    job_version = os.environ.get('JOB_VERSION')
+    base_url = f'/pub/fatman/{job_name}/{job_version}'
 
     fastapi_app = create_fastapi(
-        title=f'Fatman - {fatman_name}',
-        description='Fatman Module wrapped in a REST server',
+        title=f'Job - {job_name}',
+        description='Job Module wrapped in a REST server',
         base_url=base_url,
-        version=fatman_version,
+        version=job_version,
         authorizations=get_racetrack_authorizations_methods(),
         request_access_log=True,
         response_access_log=True,
     )
-    register_fatman_json_encoder()
+    register_job_json_encoder()
 
-    setup_health_endpoints(fastapi_app, health_state, fatman_name)
+    setup_health_endpoints(fastapi_app, health_state, job_name)
     setup_entrypoint_metrics(entrypoint)
     setup_metrics_endpoint(fastapi_app)
 
@@ -89,17 +89,17 @@ def create_api_app(
     fastapi_app.include_router(api_router, prefix="/api/v1")
 
     if os.environ.get('OPENTELEMETRY_ENDPOINT'):
-        setup_opentelemetry(fastapi_app, os.environ.get('OPENTELEMETRY_ENDPOINT'), 'fatman', {
-            'fatman_name': fatman_name,
-            'fatman_version': fatman_version,
+        setup_opentelemetry(fastapi_app, os.environ.get('OPENTELEMETRY_ENDPOINT'), 'job', {
+            'job_name': job_name,
+            'job_version': job_version,
         })
 
-    return mount_at_base_path(fastapi_app, '/pub/fatman/{fatman_name}/{version}')
+    return mount_at_base_path(fastapi_app, '/pub/fatman/{job_name}/{version}')
 
 
 def _setup_api_endpoints(
     api: APIRouter,
-    entrypoint: FatmanEntrypoint,
+    entrypoint: JobEntrypoint,
     fastapi_app: FastAPI,
     base_url: str,
 ):
@@ -109,7 +109,7 @@ def _setup_api_endpoints(
     setup_webview_endpoints(entrypoint, base_url, fastapi_app, api)
 
 
-def _setup_perform_endpoint(api: APIRouter, entrypoint: FatmanEntrypoint):
+def _setup_perform_endpoint(api: APIRouter, entrypoint: JobEntrypoint):
     example_input = get_input_example(entrypoint, endpoint='/perform')
 
     endpoint_path = '/perform'
@@ -147,7 +147,7 @@ def _setup_perform_endpoint(api: APIRouter, entrypoint: FatmanEntrypoint):
         return list_entrypoint_parameters(entrypoint)
 
 
-def _setup_auxiliary_endpoints(api: APIRouter, entrypoint: FatmanEntrypoint):
+def _setup_auxiliary_endpoints(api: APIRouter, entrypoint: JobEntrypoint):
     """Configure custom auxiliary endpoints defined by user in an entypoint"""
     auxiliary_endpoints = list_auxiliary_endpoints(entrypoint)
     for endpoint_path in sorted(auxiliary_endpoints.keys()):
@@ -200,7 +200,7 @@ def _setup_auxiliary_endpoints(api: APIRouter, entrypoint: FatmanEntrypoint):
         logger.info(f'configured auxiliary endpoint: {endpoint_path}')
 
 
-def _setup_static_endpoints(api: APIRouter, entrypoint: FatmanEntrypoint):
+def _setup_static_endpoints(api: APIRouter, entrypoint: JobEntrypoint):
     """Configure custom static endpoints defined by user in an entypoint"""
     static_endpoints = list_static_endpoints(entrypoint)
     for endpoint_path in sorted(static_endpoints.keys()):
@@ -210,14 +210,14 @@ def _setup_static_endpoints(api: APIRouter, entrypoint: FatmanEntrypoint):
 
 def _setup_static_endpoint(
     api: APIRouter,
-    entrypoint: FatmanEntrypoint,
+    entrypoint: JobEntrypoint,
     endpoint_path: str,
     static_file: Union[Tuple, str],
 ):
     """
     Configure custom static endpoints defined by user in an entypoint
     :param api: FastAPI API namespace
-    :param entrypoint: Fatman entrypoint instance
+    :param entrypoint: Job entrypoint instance
     :param endpoint_path: endpoint path, eg. /ui/index
     :param static_file: static file path or tuple of (path, mimetype)
     """
@@ -263,7 +263,7 @@ def _get_static_file_with_mimetype(static_file: Union[Tuple, str]) -> Tuple[Path
     return path, mimetype
 
 
-def _setup_request_context(entrypoint: FatmanEntrypoint, fastapi_app: FastAPI):
+def _setup_request_context(entrypoint: JobEntrypoint, fastapi_app: FastAPI):
     request_context: ContextVar[Request] = ContextVar('request_context')
     setattr(entrypoint, 'request_context', request_context)
 

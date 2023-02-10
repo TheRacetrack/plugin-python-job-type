@@ -4,7 +4,7 @@
 3. Create ESC and assign "python-chain" job to it in Racetrack admin panel: http://localhost:7103/lifecycle/admin
 4. In Racetrack admin panel open "python-class" job and add "python-chain" job to its "Allowed jobs".
 
-# Calling a Fatman
+# Calling a Job
 This job calls another model suming up given numbers (good old "python-class" model).
 After getting partial result, it returns rounded integer.
 
@@ -23,7 +23,7 @@ The following request checks service's healthiness:
 ```bash
 curl "http://localhost:7105/pub/fatman/python-chain/latest/health" 
 # Expect:
-# {"service": "fatman", "fatman_name": "python-chain", "status": "pass"}
+# {"service": "job", "job_name": "python-chain", "status": "pass"}
 ```
 
 # API docs

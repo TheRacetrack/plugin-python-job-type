@@ -39,12 +39,12 @@ class HealthState:
         if self.live:
             return {
                 'live': True,
-                'deployment_timestamp': os.environ.get('FATMAN_DEPLOYMENT_TIMESTAMP'),
+                'deployment_timestamp': os.environ.get('JOB_DEPLOYMENT_TIMESTAMP'),
             }, 200
         else:
             return {
                 'live': False,
-                'deployment_timestamp': os.environ.get('FATMAN_DEPLOYMENT_TIMESTAMP'),
+                'deployment_timestamp': os.environ.get('JOB_DEPLOYMENT_TIMESTAMP'),
                 'error': self.error,
             }, 500
 
@@ -57,32 +57,32 @@ class HealthState:
         else:
             return {'ready': False}, 500
 
-    def health_response(self, fatman_name: str) -> Tuple[Dict, int]:
+    def health_response(self, job_name: str) -> Tuple[Dict, int]:
         """
         :return: health response in a tuple format: JSON output, HTTP status code
         """
         result = {
-            'service': 'fatman',
-            'fatman_name': fatman_name,
+            'service': 'job',
+            'job_name': job_name,
             'live': self.live,
             'ready': self.ready,
             'status': 'pass' if self.ready else 'fail',
             'error': self.error,
-            'fatman_version': os.environ.get('FATMAN_VERSION'),
+            'job_version': os.environ.get('JOB_VERSION'),
             'git_version': os.environ.get('GIT_VERSION'),
             'deployed_by_racetrack_version': os.environ.get('DEPLOYED_BY_RACETRACK_VERSION'),
-            'deployment_timestamp': os.environ.get('FATMAN_DEPLOYMENT_TIMESTAMP'),
+            'deployment_timestamp': os.environ.get('JOB_DEPLOYMENT_TIMESTAMP'),
             'job_type_version': os.environ.get('JOB_TYPE_VERSION'),
         }
         return result, 200 if self.live and self.ready else 500
 
 
-def setup_health_endpoints(api: FastAPI, health_state: HealthState, fatman_name: str):
+def setup_health_endpoints(api: FastAPI, health_state: HealthState, job_name: str):
 
     @api.get("/health", tags=['root'])
     async def _health():
         """Report current aggregated application status"""
-        content, status = health_state.health_response(fatman_name)
+        content, status = health_state.health_response(job_name)
         return JSONResponse(content=content, status_code=status)
 
     @api.get("/live", tags=['root'])

@@ -1,7 +1,7 @@
-# Fatman wrapper
-Fatman-wrapper is a Python package embedding given Python class in a REST server.
+# Job wrapper
+Job-wrapper is a Python package embedding given Python class in a REST server.
 
-# Running sample Fatman local server
+# Running sample Job local server
 Basic API with exemplary model can be started with:
 ```bash
 make run

@@ -1,4 +1,4 @@
-# Calling a Fatman
+# Calling a Job
 The model sums up given numbers. 
 The following request performs its functionality:
 ```bash

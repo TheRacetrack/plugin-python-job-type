@@ -1,7 +1,7 @@
 # Deploying
 Run `racetrack deploy` in this directory.
 
-# Calling a Fatman
+# Calling a Job
 This job sums up given numbers. 
 
 The following request performs its functionality by calling it through PUB:
@@ -18,7 +18,7 @@ The following request checks service's healthiness:
 ```bash
 curl "http://localhost:7005/pub/fatman/python-ui-flask/latest/health" 
 # Expect:
-# {"service": "fatman", "status": "pass"}
+# {"service": "job", "status": "pass"}
 ```
 
 # API docs

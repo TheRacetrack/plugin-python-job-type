@@ -5,16 +5,16 @@ from multiprocessing import Process
 import backoff
 from fastapi.testclient import TestClient
 
-from fatman_wrapper.health import HealthState
-from fatman_wrapper.loader import instantiate_class_entrypoint
-from fatman_wrapper.main import run_configured_entrypoint
-from fatman_wrapper.wrapper import create_api_app
+from job_wrapper.health import HealthState
+from job_wrapper.loader import instantiate_class_entrypoint
+from job_wrapper.main import run_configured_entrypoint
+from job_wrapper.wrapper import create_api_app
 from racetrack_client.utils.request import Requests, RequestError
 
 
 def test_health_endpoints():
-    os.environ['FATMAN_NAME'] = 'skynet'
-    os.environ['FATMAN_VERSION'] = '1.2.3'
+    os.environ['JOB_NAME'] = 'skynet'
+    os.environ['JOB_VERSION'] = '1.2.3'
     os.environ['GIT_VERSION'] = '1.2.3-2-g123456'
     os.environ['DEPLOYED_BY_RACETRACK_VERSION'] = '0.0.15'
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
@@ -27,8 +27,8 @@ def test_health_endpoints():
     assert response.status_code == 200
     obj = response.json()
     assert obj['status'] == 'pass'
-    assert obj['fatman_name'] == 'skynet'
-    assert obj['fatman_version'] == '1.2.3'
+    assert obj['job_name'] == 'skynet'
+    assert obj['job_version'] == '1.2.3'
     assert obj['git_version'] == '1.2.3-2-g123456'
     assert obj['deployed_by_racetrack_version'] == '0.0.15'
 

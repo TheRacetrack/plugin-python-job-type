@@ -2,7 +2,7 @@ import random
 from typing import Dict, List
 
 
-class FatmanEntrypoint:
+class JobEntrypoint:
     def perform(self) -> float:
         return random.random()
 
@@ -10,12 +10,12 @@ class FatmanEntrypoint:
         """Collect current metrics values"""
         return [
             {
-                'name': 'fatman_wasted_seconds',
+                'name': 'job_wasted_seconds',
                 'description': 'Seconds you have wasted here',
                 'value': 1.2,
             },
             {
-                'name': 'fatman_positives',
+                'name': 'job_positives',
                 'description': 'Number of positive results',
                 'value': 5,
                 'labels': {
@@ -23,12 +23,12 @@ class FatmanEntrypoint:
                 },
             },
             {
-                'name': 'fatman_zero_value',
+                'name': 'job_zero_value',
                 'description': 'Nil',
                 'value': 0,
             },
             {
-                'name': 'fatman_null_value',
+                'name': 'job_null_value',
                 'description': 'Nil',
                 'value': None,
             },

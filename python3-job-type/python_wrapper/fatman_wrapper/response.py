@@ -3,7 +3,7 @@ from racetrack_commons.api.response import ResponseJSONEncoder, register_respons
 from pydantic.json import ENCODERS_BY_TYPE
 
 
-class FatmanJSONEncoder(ResponseJSONEncoder):
+class JobJSONEncoder(ResponseJSONEncoder):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -20,7 +20,7 @@ class FatmanJSONEncoder(ResponseJSONEncoder):
         return super().default(o)
 
 
-def register_fatman_json_encoder():
+def register_job_json_encoder():
     register_response_json_encoder()
 
     try:

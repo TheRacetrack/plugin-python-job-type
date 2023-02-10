@@ -1,6 +1,6 @@
 from typing import Callable, Dict
-from fatman_wrapper.api import create_api_app
-from fatman_wrapper.health import HealthState
+from job_wrapper.api import create_api_app
+from job_wrapper.health import HealthState
 from fastapi.testclient import TestClient
 
 
