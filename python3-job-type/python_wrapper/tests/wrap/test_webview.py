@@ -25,23 +25,23 @@ def test_requesting_webview_wsgi_pages(revert_workdir):
     _fix_app_middleware(api_app)
     client = TestClient(api_app)
 
-    response = client.get('/pub/fatman/skynet/0.0.1/api/v1/webview')
+    response = client.get('/pub/job/skynet/0.0.1/api/v1/webview')
     assert response.status_code == 200, 'webview without a slash is forwarded automatically'
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview returns HTML'
 
-    response = client.get('/pub/fatman/skynet/0.0.1/api/v1/webview/')
+    response = client.get('/pub/job/skynet/0.0.1/api/v1/webview/')
     assert response.status_code == 200
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview returns HTML'
-    assert 'href="/pub/fatman/skynet/0.0.1/api/v1/webview/static/style.css"' in html, 'links in HTML have valid prefixes'
+    assert 'href="/pub/job/skynet/0.0.1/api/v1/webview/static/style.css"' in html, 'links in HTML have valid prefixes'
 
-    response = client.get('/pub/fatman/skynet/latest/api/v1/webview/')
+    response = client.get('/pub/job/skynet/latest/api/v1/webview/')
     assert response.status_code == 200
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview can be called by latest version'
 
-    response = client.get('/pub/fatman/skynet/latest/api/v1/webview/static/style.css')
+    response = client.get('/pub/job/skynet/latest/api/v1/webview/static/style.css')
     assert response.status_code == 200
     content = response.text
     assert 'background-color' in content, 'static resources are served'
@@ -56,24 +56,24 @@ def test_requesting_webview_asgi_pages(revert_workdir):
     _fix_app_middleware(api_app)
     client = TestClient(api_app)
 
-    response = client.get('/pub/fatman/skynet/0.0.1/api/v1/webview')
+    response = client.get('/pub/job/skynet/0.0.1/api/v1/webview')
     print(response.content)
     assert response.status_code == 200, 'webview without a slash is forwarded automatically'
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview returns HTML'
 
-    response = client.get('/pub/fatman/skynet/0.0.1/api/v1/webview/')
+    response = client.get('/pub/job/skynet/0.0.1/api/v1/webview/')
     assert response.status_code == 200
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview returns HTML'
-    assert 'href="/pub/fatman/skynet/0.0.1/api/v1/webview/static/style.css"' in html, 'links in HTML have valid prefixes'
+    assert 'href="/pub/job/skynet/0.0.1/api/v1/webview/static/style.css"' in html, 'links in HTML have valid prefixes'
 
-    response = client.get('/pub/fatman/skynet/latest/api/v1/webview/')
+    response = client.get('/pub/job/skynet/latest/api/v1/webview/')
     assert response.status_code == 200
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview can be called by latest version'
 
-    response = client.get('/pub/fatman/skynet/latest/api/v1/webview/static/style.css')
+    response = client.get('/pub/job/skynet/latest/api/v1/webview/static/style.css')
     assert response.status_code == 200
     content = response.text
     assert 'background-color' in content, 'static resources are served'

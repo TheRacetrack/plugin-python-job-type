@@ -44,7 +44,7 @@ def create_health_app(health_state: HealthState) -> FastAPI:
     """
     job_name = os.environ.get('JOB_NAME', '')
     job_version = os.environ.get('JOB_VERSION')
-    base_url = f'/pub/fatman/{job_name}/{job_version}'
+    base_url = f'/pub/job/{job_name}/{job_version}'
 
     fastapi_app = create_fastapi(
         title=f'Job - {job_name}',
@@ -56,7 +56,7 @@ def create_health_app(health_state: HealthState) -> FastAPI:
 
     setup_health_endpoints(fastapi_app, health_state, job_name)
 
-    return mount_at_base_path(fastapi_app, '/pub/fatman/{job_name}/{version}')
+    return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}')
 
 
 def create_api_app(
@@ -66,7 +66,7 @@ def create_api_app(
     """Create FastAPI app and register all endpoints without running a server"""
     job_name = os.environ.get('JOB_NAME', '')
     job_version = os.environ.get('JOB_VERSION')
-    base_url = f'/pub/fatman/{job_name}/{job_version}'
+    base_url = f'/pub/job/{job_name}/{job_version}'
 
     fastapi_app = create_fastapi(
         title=f'Job - {job_name}',
@@ -94,7 +94,7 @@ def create_api_app(
             'job_version': job_version,
         })
 
-    return mount_at_base_path(fastapi_app, '/pub/fatman/{job_name}/{version}')
+    return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}')
 
 
 def _setup_api_endpoints(

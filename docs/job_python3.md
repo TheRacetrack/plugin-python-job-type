@@ -253,7 +253,7 @@ See [python-env-secret](../sample/python-env-secret) for an example.
 To expose selected job endpoints to the public (to be accessible without authentication)
 include them in the `public_endpoints` field in a manifest.
 Every endpoint opens access to an exact specified path as well as all subpaths starting with that path.
-Use short path endings without `/pub/fatman/.../` prefix:
+Use short path endings without `/pub/job/.../` prefix:
 ```yaml
 public_endpoints:
   - '/api/v1/perform'

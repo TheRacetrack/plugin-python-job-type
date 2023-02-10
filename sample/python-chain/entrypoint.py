@@ -26,7 +26,7 @@ class JobEntrypoint:
         try:
             src_job = os.environ['JOB_NAME']
             internal_pub_url = os.environ['PUB_URL']
-            url = f'{internal_pub_url}/fatman/{job_name}/{version}{path}'
+            url = f'{internal_pub_url}/job/{job_name}/{version}{path}'
 
             tracing_header = os.environ.get('REQUEST_TRACING_HEADER', 'X-Request-Tracing-Id')
             if hasattr(self, 'request_context'):
