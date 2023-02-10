@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 class Plugin:
-    def job_job_types(self) -> dict[str, tuple[Path, Path]]:
+    def job_types(self) -> dict[str, tuple[Path, Path]]:
         """
         Job types provided by this plugin
         :return dict of job type name (with version) -> (base image path, dockerfile template path)
