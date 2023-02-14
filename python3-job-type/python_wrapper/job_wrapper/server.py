@@ -1,9 +1,9 @@
 import threading
 from typing import Optional
 
-from fatman_wrapper.api import create_health_app
-from fatman_wrapper.health import HealthState
-from fatman_wrapper.wrapper import create_entrypoint_app
+from job_wrapper.api import create_health_app
+from job_wrapper.health import HealthState
+from job_wrapper.wrapper import create_entrypoint_app
 from racetrack_client.log.exception import short_exception_details
 from racetrack_client.log.logs import get_logger
 from racetrack_commons.api.asgi.asgi_reloader import ASGIReloader

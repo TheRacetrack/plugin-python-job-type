@@ -1,11 +1,11 @@
-from fatman_wrapper.api import create_api_app
-from fatman_wrapper.entrypoint import FatmanEntrypoint
-from fatman_wrapper.health import HealthState
+from job_wrapper.api import create_api_app
+from job_wrapper.entrypoint import JobEntrypoint
+from job_wrapper.health import HealthState
 from fastapi.testclient import TestClient
 
 
 def test_bad_request():
-    class TestEntrypoint(FatmanEntrypoint):
+    class TestEntrypoint(JobEntrypoint):
         def perform(self):
             raise ValueError('nope')
 

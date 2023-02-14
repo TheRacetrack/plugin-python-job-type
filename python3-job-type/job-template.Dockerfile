@@ -10,18 +10,18 @@ RUN mkdir -p /usr/share/man/man1 && apt-get update -y && apt-get install -y \
 {% endif %}
 
 {% if manifest.python.requirements_path %}
-COPY "{{ manifest.python.requirements_path }}" /src/fatman/
-RUN . /src/fat-venv/bin/activate &&\
-    cd /src/fatman/ &&\
+COPY "{{ manifest.python.requirements_path }}" /src/job/
+RUN . /src/job-venv/bin/activate &&\
+    cd /src/job/ &&\
     pip install -r "{{ manifest.python.requirements_path }}"
 {% endif %}
 
-COPY . /src/fatman/
-RUN chmod -R a+rw /src/fatman/
+COPY . /src/job/
+RUN chmod -R a+rw /src/job/
 
-CMD python -u -m fatman_wrapper run "{{ manifest.python.entrypoint_path }}" "{{ manifest.python.entrypoint_class }}" < /dev/null
-ENV FATMAN_NAME "{{ manifest.name }}"
-ENV FATMAN_VERSION "{{ manifest.version }}"
+CMD python -u -m job_wrapper run "{{ manifest.python.entrypoint_path }}" "{{ manifest.python.entrypoint_class }}" < /dev/null
+ENV JOB_NAME "{{ manifest.name }}"
+ENV JOB_VERSION "{{ manifest.version }}"
 ENV GIT_VERSION "{{ git_version }}"
 ENV DEPLOYED_BY_RACETRACK_VERSION "{{ deployed_by_racetrack_version }}"
 ENV JOB_TYPE_VERSION "{{ job_type_version }}"

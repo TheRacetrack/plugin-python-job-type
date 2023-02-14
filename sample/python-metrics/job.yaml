@@ -1,11 +1,11 @@
-name: python-auxiliary-endpoints
+name: python-metrics
 owner_email: sample@example.com
 lang: python3:latest
 
 git:
   remote: https://github.com/TheRacetrack/plugin-python-job-type
-  directory: sample/python-auxiliary-endpoints
+  directory: sample/python-metrics
 
 python:
   entrypoint_path: 'entrypoint.py'
-  entrypoint_class: 'FatmanEntrypoint'
+  entrypoint_class: 'JobEntrypoint'

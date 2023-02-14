@@ -1,5 +1,5 @@
-from fatman_wrapper.entrypoint import list_entrypoint_parameters
-from fatman_wrapper.loader import instantiate_class_entrypoint
+from job_wrapper.entrypoint import list_entrypoint_parameters
+from job_wrapper.loader import instantiate_class_entrypoint
 
 
 def test_wrapped_endpoints():

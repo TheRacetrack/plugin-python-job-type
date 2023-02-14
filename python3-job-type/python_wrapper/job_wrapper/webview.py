@@ -10,13 +10,13 @@ from a2wsgi import WSGIMiddleware
 
 from racetrack_commons.api.asgi.proxy import TrailingSlashForwarder, mount_at_base_path
 from racetrack_client.log.logs import get_logger
-from fatman_wrapper.entrypoint import FatmanEntrypoint
+from job_wrapper.entrypoint import JobEntrypoint
 
 logger = get_logger(__name__)
 
 
 def setup_webview_endpoints(
-    entrypoint: FatmanEntrypoint,
+    entrypoint: JobEntrypoint,
     base_url: str,
     fastapi_app: FastAPI,
     api: APIRouter,
@@ -50,12 +50,12 @@ def setup_webview_endpoints(
     logger.info(f'Webview app mounted at {webview_base_url}')
 
     @api.get('/webview/{path:path}')
-    def _fatman_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
+    def _job_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
         """Call custom Webview UI pages"""
         pass  # just register endpoint in swagger, it's handled by ASGI
 
 
-def instantiate_webview_app(entrypoint: FatmanEntrypoint, base_url: str) -> Optional[Callable]:
+def instantiate_webview_app(entrypoint: JobEntrypoint, base_url: str) -> Optional[Callable]:
     if not hasattr(entrypoint, 'webview_app'):
         return None
     webview_app_function = getattr(entrypoint, 'webview_app')

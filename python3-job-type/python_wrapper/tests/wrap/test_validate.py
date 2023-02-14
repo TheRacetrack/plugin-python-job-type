@@ -1,11 +1,11 @@
 import pytest
 
-from fatman_wrapper.entrypoint import FatmanEntrypoint
-from fatman_wrapper.validate import validate_entrypoint
+from job_wrapper.entrypoint import JobEntrypoint
+from job_wrapper.validate import validate_entrypoint
 
 
 def test_docs_input_example_not_serializable():
-    class TestEntrypoint(FatmanEntrypoint):
+    class TestEntrypoint(JobEntrypoint):
         def perform(self, **kwargs):
             pass
 
@@ -22,7 +22,7 @@ def test_docs_input_example_not_serializable():
 
 
 def test_docs_input_example_over_maximum_size():
-    class TestEntrypoint(FatmanEntrypoint):
+    class TestEntrypoint(JobEntrypoint):
         def perform(self, **kwargs):
             pass
 
@@ -38,7 +38,7 @@ def test_docs_input_example_over_maximum_size():
 
 
 def test_docs_input_example_not_a_dict():
-    class TestEntrypoint(FatmanEntrypoint):
+    class TestEntrypoint(JobEntrypoint):
         def perform(self, **kwargs):
             pass
 

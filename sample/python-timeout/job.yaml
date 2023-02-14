@@ -1,11 +1,12 @@
-name: python-metrics
+name: windows12
+version: '0.0.1'
 owner_email: sample@example.com
 lang: python3:latest
 
 git:
   remote: https://github.com/TheRacetrack/plugin-python-job-type
-  directory: sample/python-metrics
-
+  directory: sample/python-timeout
+  
 python:
-  entrypoint_path: 'entrypoint.py'
-  entrypoint_class: 'FatmanEntrypoint'
+  entrypoint_path: 'job.py'
+  entrypoint_class: TimeoutJob

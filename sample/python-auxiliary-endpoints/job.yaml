@@ -1,13 +1,11 @@
-name: python-chain
-version: 0.0.2
+name: python-auxiliary-endpoints
 owner_email: sample@example.com
 lang: python3:latest
 
 git:
   remote: https://github.com/TheRacetrack/plugin-python-job-type
-  directory: sample/python-chain
+  directory: sample/python-auxiliary-endpoints
 
 python:
-  requirements_path: 'requirements.txt'
   entrypoint_path: 'entrypoint.py'
-  entrypoint_class: 'FatmanEntrypoint'
+  entrypoint_class: 'JobEntrypoint'
