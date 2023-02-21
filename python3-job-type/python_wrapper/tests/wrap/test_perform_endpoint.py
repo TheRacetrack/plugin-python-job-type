@@ -7,9 +7,15 @@ def test_wrapped_endpoints():
 
     client = TestClient(api_app)
 
-    response = client.post(
+    paths = [
         '/api/v1/perform',
-        json={'numbers': [40, 2]},
-    )
-    assert response.status_code == 200
-    assert response.json() == 42
+        '/pub/job/adder/latest/api/v1/perform',
+        '/pub/fatman/adder/latest/api/v1/perform',  # backward compatibility
+    ]
+    for path in paths:
+        response = client.post(
+            path,
+            json={'numbers': [40, 2]},
+        )
+        assert response.status_code == 200
+        assert response.json() == 42

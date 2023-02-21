@@ -56,7 +56,7 @@ def create_health_app(health_state: HealthState) -> FastAPI:
 
     setup_health_endpoints(fastapi_app, health_state, job_name)
 
-    return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}')
+    return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}', '/pub/fatman/{job_name}/{version}')
 
 
 def create_api_app(
@@ -94,7 +94,7 @@ def create_api_app(
             'job_version': job_version,
         })
 
-    return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}')
+    return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}', '/pub/fatman/{job_name}/{version}')
 
 
 def _setup_api_endpoints(
