@@ -1,13 +1,13 @@
 name: python-chain
 version: 0.0.2
 owner_email: sample@example.com
-lang: python3:latest
+jobtype: python3:latest
 
 git:
   remote: https://github.com/TheRacetrack/plugin-python-job-type
   directory: sample/python-chain
 
-python:
+jobtype_extra:
   requirements_path: 'requirements.txt'
   entrypoint_path: 'entrypoint.py'
   entrypoint_class: 'JobEntrypoint'
