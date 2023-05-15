@@ -1,5 +1,5 @@
 name: python-chain
-version: 0.0.2
+version: 0.0.3
 owner_email: sample@example.com
 jobtype: python3:latest
 
