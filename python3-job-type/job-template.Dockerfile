@@ -9,6 +9,22 @@ RUN mkdir -p /usr/share/man/man1 && apt-get update -y && apt-get install -y \
     {{ manifest.system_dependencies | join(' ') }}
 {% endif %}
 
+
+{% if manifest.python %}
+{% if manifest.python.requirements_path %}
+COPY "{{ manifest.python.requirements_path }}" /src/job/
+RUN . /src/job-venv/bin/activate &&\
+    cd /src/job/ &&\
+    pip install -r "{{ manifest.python.requirements_path }}"
+{% endif %}
+
+COPY . /src/job/
+RUN chmod -R a+rw /src/job/
+
+CMD python -u -m job_wrapper run "{{ manifest.python.entrypoint_path }}" "{{ manifest.python.entrypoint_class }}" < /dev/null
+{% endif %}
+
+{% if manifest.jobtype_extra %}
 {% if manifest.jobtype_extra.requirements_path %}
 COPY "{{ manifest.jobtype_extra.requirements_path }}" /src/job/
 RUN . /src/job-venv/bin/activate &&\
@@ -20,6 +36,8 @@ COPY . /src/job/
 RUN chmod -R a+rw /src/job/
 
 CMD python -u -m job_wrapper run "{{ manifest.jobtype_extra.entrypoint_path }}" "{{ manifest.jobtype_extra.entrypoint_class }}" < /dev/null
+{% endif %}
+
 ENV JOB_NAME "{{ manifest.name }}"
 ENV JOB_VERSION "{{ manifest.version }}"
 ENV GIT_VERSION "{{ git_version }}"
