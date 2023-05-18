@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.2] - 2023-05-18
+### Added
+- Setting `LOG_CALLER_NAME: 'true'` env var in a manifest allows you
+  to keep record of a caller in the job's logs.
+  This will add caller identity (username or ESC name) to every log entry.
+
 ## [2.5.7] - 2022-12-01
 ### Fixed
 - `python3` base image has now `git` and `build-essential` installed (again).
