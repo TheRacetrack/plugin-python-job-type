@@ -268,6 +268,25 @@ Such approval needs to be done once for every new job version (with distinct `ve
 
 See [python-ui-flask](../sample/python-ui-flask) for an example.
 
+### Logging
+To produce logs, use `logging` module inside your job:
+```python
+import logging
+logger = logging.getLogger(__name__)
+
+class JobEntrypoint:
+    def perform(self):
+        logger.info('something happened')
+```
+
+### Caller name
+Setting `LOG_CALLER_NAME` in a manifest allows you to keep record of a caller in the job's logs:
+```yaml
+runtime_env:
+  LOG_CALLER_NAME: 'true'
+```
+This will add caller identity (username or ESC name) to every log entry.
+
 ## Summary of principles
 To sum up:
 
