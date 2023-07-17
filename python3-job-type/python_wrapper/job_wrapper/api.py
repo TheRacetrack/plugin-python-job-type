@@ -3,10 +3,11 @@ import mimetypes
 import os
 import time
 from pathlib import Path
-from typing import Any, Callable, Dict, Tuple, Union
+from typing import Any, Callable, Dict, Tuple, Union, Optional
 from contextvars import ContextVar
 
 from fastapi import Body, FastAPI, APIRouter, Request, Response
+from fastapi.responses import RedirectResponse
 
 from job_wrapper.webview import setup_webview_endpoints
 from job_wrapper.docs import get_input_example, get_perform_docs
@@ -52,6 +53,7 @@ def create_health_app(health_state: HealthState) -> FastAPI:
         base_url=base_url,
         version=job_version,
         request_access_log=True,
+        docs_url='/docs',
     )
 
     setup_health_endpoints(fastapi_app, health_state, job_name)
@@ -62,10 +64,12 @@ def create_health_app(health_state: HealthState) -> FastAPI:
 def create_api_app(
     entrypoint: JobEntrypoint,
     health_state: HealthState,
+    manifest_dict: Optional[Dict[str, Any]] = None,
 ) -> FastAPI:
     """Create FastAPI app and register all endpoints without running a server"""
     job_name = os.environ.get('JOB_NAME', '')
     job_version = os.environ.get('JOB_VERSION')
+    home_page = manifest_dict.get('jobtype_extra', {}).get('home_page') or '/docs'
     base_url = f'/pub/job/{job_name}/{job_version}'
 
     fastapi_app = create_fastapi(
@@ -76,6 +80,7 @@ def create_api_app(
         authorizations=get_racetrack_authorizations_methods(),
         request_access_log=True,
         response_access_log=True,
+        docs_url='/docs',
     )
     register_job_json_encoder()
 
@@ -87,6 +92,10 @@ def create_api_app(
     _setup_api_endpoints(api_router, entrypoint, fastapi_app, base_url)
     _setup_request_context(entrypoint, fastapi_app)
     fastapi_app.include_router(api_router, prefix="/api/v1")
+
+    @fastapi_app.get('/')
+    async def _root_endpoint():
+        return RedirectResponse(f"{base_url}{home_page}")
 
     if os.environ.get('OPENTELEMETRY_ENDPOINT'):
         setup_opentelemetry(fastapi_app, os.environ.get('OPENTELEMETRY_ENDPOINT'), 'job', {
