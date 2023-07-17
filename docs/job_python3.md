@@ -268,6 +268,15 @@ Such approval needs to be done once for every new job version (with distinct `ve
 
 See [python-ui-flask](../sample/python-ui-flask) for an example.
 
+### Home page
+You can configure the home page of your job.
+Home page is the one you see when opening a job through the Dashboard or at the root endpoint.
+By default, it shows the SwaggerUI page. Now you can change it, for instance, to a webview endpoint:
+```yaml
+jobtype_extra:
+  home_page: '/api/v1/webview'
+```
+
 ### Logging
 To produce logs, use `logging` module inside your job:
 ```python
