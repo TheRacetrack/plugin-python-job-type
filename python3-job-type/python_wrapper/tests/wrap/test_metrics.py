@@ -8,7 +8,7 @@ from job_wrapper.wrapper import create_api_app
 
 def test_metrics_endpoint():
     model = instantiate_class_entrypoint('sample/metrics_job.py', None)
-    api_app = create_api_app(model, HealthState(live=True, ready=True), {})
+    api_app = create_api_app(model, HealthState(live=True, ready=True))
 
     client = TestClient(api_app)
 

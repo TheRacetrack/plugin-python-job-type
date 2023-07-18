@@ -64,7 +64,7 @@ def create_health_app(health_state: HealthState) -> FastAPI:
 def create_api_app(
     entrypoint: JobEntrypoint,
     health_state: HealthState,
-    manifest_dict: Dict[str, Any],
+    manifest_dict: Dict[str, Any] = {},
 ) -> FastAPI:
     """Create FastAPI app and register all endpoints without running a server"""
     job_name = os.environ.get('JOB_NAME', '')

@@ -9,6 +9,7 @@ from job_wrapper.health import HealthState
 from job_wrapper.loader import instantiate_class_entrypoint
 from job_wrapper.main import run_configured_entrypoint
 from job_wrapper.wrapper import create_api_app
+from racetrack_client.log.logs import init_logs, configure_logs
 from racetrack_client.utils.request import Requests, RequestError
 
 
@@ -19,7 +20,7 @@ def test_health_endpoints():
     os.environ['DEPLOYED_BY_RACETRACK_VERSION'] = '0.0.15'
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
     health_state = HealthState(live=True, ready=True)
-    api_app = create_api_app(model, health_state, {})
+    api_app = create_api_app(model, health_state)
 
     client = TestClient(api_app)
 
@@ -42,7 +43,7 @@ def test_health_endpoints():
 def test_live_but_not_ready():
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
     health_state = HealthState(live=True, ready=False)
-    api_app = create_api_app(model, health_state, {})
+    api_app = create_api_app(model, health_state)
 
     client = TestClient(api_app)
 
@@ -59,7 +60,7 @@ def test_live_but_not_ready():
 def test_ready_but_not_live():
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
     health_state = HealthState(live=False, ready=True)
-    api_app = create_api_app(model, health_state, {})
+    api_app = create_api_app(model, health_state)
 
     client = TestClient(api_app)
 
@@ -75,6 +76,8 @@ def test_ready_but_not_live():
 
 def test_bootstrap_server():
     port = free_tcp_port()
+    init_logs()
+    configure_logs(log_level='debug')
 
     def target():
         run_configured_entrypoint(port, 'sample/adder_model.py')

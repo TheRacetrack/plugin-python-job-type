@@ -20,7 +20,7 @@ def test_requesting_webview_wsgi_pages(revert_workdir):
     os.chdir('sample/webview')
     os.environ['JOB_NAME'] = 'skynet'
     os.environ['JOB_VERSION'] = '0.0.1'
-    api_app = create_entrypoint_app('webview_wsgi_model.py', class_name='JobEntrypoint')
+    api_app = create_entrypoint_app('webview_wsgi_model.py', class_name='JobEntrypoint', manifest_dict={})
 
     _fix_app_middleware(api_app)
     client = TestClient(api_app)
@@ -57,7 +57,6 @@ def test_requesting_webview_asgi_pages(revert_workdir):
     client = TestClient(api_app)
 
     response = client.get('/pub/job/skynet/0.0.1/api/v1/webview')
-    print(response.content)
     assert response.status_code == 200, 'webview without a slash is forwarded automatically'
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview returns HTML'
@@ -77,6 +76,14 @@ def test_requesting_webview_asgi_pages(revert_workdir):
     assert response.status_code == 200
     content = response.text
     assert 'background-color' in content, 'static resources are served'
+
+    response = client.get('/pub/job/skynet/0.0.1', follow_redirects=False)
+    assert response.status_code == 307, 'root endpoint should append slash'
+    assert response.headers['location'] == '/pub/job/skynet/0.0.1/', 'root endpoint should append slash'
+
+    response = client.get('/pub/job/skynet/0.0.1/', follow_redirects=False)
+    assert response.status_code == 307, 'root endpoint should redirect to a home page'
+    assert response.headers['location'] == '/pub/job/skynet/0.0.1/api/v1/webview', 'home page should redirect to a webview'
 
 
 def _fix_app_middleware(api_app: FastAPI):
