@@ -19,7 +19,7 @@ def test_health_endpoints():
     os.environ['DEPLOYED_BY_RACETRACK_VERSION'] = '0.0.15'
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
     health_state = HealthState(live=True, ready=True)
-    api_app = create_api_app(model, health_state)
+    api_app = create_api_app(model, health_state, {})
 
     client = TestClient(api_app)
 
@@ -42,7 +42,7 @@ def test_health_endpoints():
 def test_live_but_not_ready():
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
     health_state = HealthState(live=True, ready=False)
-    api_app = create_api_app(model, health_state)
+    api_app = create_api_app(model, health_state, {})
 
     client = TestClient(api_app)
 
@@ -59,7 +59,7 @@ def test_live_but_not_ready():
 def test_ready_but_not_live():
     model = instantiate_class_entrypoint('sample/adder_model.py', None)
     health_state = HealthState(live=False, ready=True)
-    api_app = create_api_app(model, health_state)
+    api_app = create_api_app(model, health_state, {})
 
     client = TestClient(api_app)
 

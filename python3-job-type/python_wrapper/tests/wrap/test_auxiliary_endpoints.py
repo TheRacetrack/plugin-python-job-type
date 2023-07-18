@@ -49,7 +49,7 @@ def test_auxiliary_endpoints():
             }
 
     entrypoint = TestEntrypoint()
-    fastapi_app = create_api_app(entrypoint, HealthState(live=True, ready=True))
+    fastapi_app = create_api_app(entrypoint, HealthState(live=True, ready=True), {})
 
     client = TestClient(fastapi_app)
 

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 
 import yaml
 from fastapi import FastAPI
@@ -26,9 +26,8 @@ def create_entrypoint_app(
     return create_api_app(entrypoint, health_state, manifest_dict)
 
 
-def _read_job_manifest() -> Optional[Dict]:
+def _read_job_manifest() -> Dict[str, Any]:
     manifest_path = Path('job.yaml')
-    if not manifest_path.is_file():
-        return None
+    assert manifest_path.is_file(), f'manifest file not found at {manifest_path}'
     with manifest_path.open() as file:
         return yaml.load(file, Loader=yaml.FullLoader)

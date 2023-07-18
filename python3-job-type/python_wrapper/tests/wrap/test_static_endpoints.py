@@ -17,7 +17,7 @@ def test_static_endpoints():
             }
 
     entrypoint = TestEntrypoint()
-    api_app = create_api_app(entrypoint, HealthState(live=True, ready=True))
+    api_app = create_api_app(entrypoint, HealthState(live=True, ready=True), {})
 
     client = TestClient(api_app)
 

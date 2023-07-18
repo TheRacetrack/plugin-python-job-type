@@ -32,7 +32,7 @@ def test_serialize_dataclass():
             return DataClassy(name='Data', age=30, is_classy=True)
 
     entrypoint = TestEntrypoint()
-    api_app = create_api_app(entrypoint, HealthState(live=True, ready=True))
+    api_app = create_api_app(entrypoint, HealthState(live=True, ready=True), {})
 
     client = TestClient(api_app)
 
@@ -53,7 +53,7 @@ def test_serialize_quantity():
 
     entrypoint = TestEntrypoint()
 
-    api_app = create_api_app(entrypoint, HealthState(live=True, ready=True))
+    api_app = create_api_app(entrypoint, HealthState(live=True, ready=True), {})
 
     client = TestClient(api_app)
 
