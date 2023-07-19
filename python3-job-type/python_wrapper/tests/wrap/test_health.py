@@ -9,6 +9,7 @@ from job_wrapper.health import HealthState
 from job_wrapper.loader import instantiate_class_entrypoint
 from job_wrapper.main import run_configured_entrypoint
 from job_wrapper.wrapper import create_api_app
+from racetrack_client.log.logs import init_logs, configure_logs
 from racetrack_client.utils.request import Requests, RequestError
 
 
@@ -75,6 +76,8 @@ def test_ready_but_not_live():
 
 def test_bootstrap_server():
     port = free_tcp_port()
+    init_logs()
+    configure_logs(log_level='debug')
 
     def target():
         run_configured_entrypoint(port, 'sample/adder_model.py')

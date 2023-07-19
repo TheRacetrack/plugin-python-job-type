@@ -4,6 +4,17 @@ All **user-facing**, notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2023-05-31
+### Added
+- You can configure the home page of your job.
+  Home page is the one you see when opening a job through the Dashboard or at the root endpoint.
+  By default, it shows the SwaggerUI page. Now you can change it, for instance, to a webview endpoint:
+  ```yaml
+  jobtype_extra:
+    home_page: '/api/v1/webview'
+  ```
+  ([#22](https://github.com/TheRacetrack/plugin-python-job-type/issues/22))
+
 ## [2.8.0] - 2023-05-31
 ### Added
 - Chain calls to the jobs can be made by importing the `call_job` function from a package provided by the job type plugin

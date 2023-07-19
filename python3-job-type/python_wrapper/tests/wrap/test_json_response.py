@@ -9,7 +9,7 @@ from racetrack_client.utils.quantity import Quantity
 
 
 def test_serialize_numpy_array():
-    api_app = create_entrypoint_app('sample/numpy_response_model.py')
+    api_app = create_entrypoint_app('sample/numpy_response_model.py', manifest_dict={})
 
     client = TestClient(api_app)
 

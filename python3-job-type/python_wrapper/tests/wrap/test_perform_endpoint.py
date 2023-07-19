@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 
 
 def test_wrapped_endpoints():
-    api_app = create_entrypoint_app('sample/adder_model.py', class_name='AdderModel')
+    api_app = create_entrypoint_app('sample/adder_model.py', class_name='AdderModel', manifest_dict={})
 
     client = TestClient(api_app)
 
