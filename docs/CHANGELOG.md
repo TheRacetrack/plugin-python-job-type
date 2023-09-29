@@ -4,6 +4,18 @@ All **user-facing**, notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.2] - 2023-09-29
+### Changed
+- Python module `job_wrapper` has been renamed to `racetrack_job_wrapper`.
+  Therefore, if you want to import chain call function, you have to use:
+  ```python
+  from racetrack_job_wrapper.call import call_job
+  ```
+
+## [2.9.1] - 2023-08-08
+### Added
+- This plugin manifests itself with category "job-type".
+
 ## [2.9.0] - 2023-05-31
 ### Added
 - You can configure the home page of your job.

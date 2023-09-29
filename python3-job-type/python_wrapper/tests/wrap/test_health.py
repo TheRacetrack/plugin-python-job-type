@@ -5,10 +5,10 @@ from multiprocessing import Process
 import backoff
 from fastapi.testclient import TestClient
 
-from job_wrapper.health import HealthState
-from job_wrapper.loader import instantiate_class_entrypoint
-from job_wrapper.main import run_configured_entrypoint
-from job_wrapper.wrapper import create_api_app
+from racetrack_job_wrapper.health import HealthState
+from racetrack_job_wrapper.loader import instantiate_class_entrypoint
+from racetrack_job_wrapper.main import run_configured_entrypoint
+from racetrack_job_wrapper.wrapper import create_api_app
 from racetrack_client.log.logs import init_logs, configure_logs
 from racetrack_client.utils.request import Requests, RequestError
 

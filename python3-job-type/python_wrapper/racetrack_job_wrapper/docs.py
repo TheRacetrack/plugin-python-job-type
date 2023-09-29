@@ -1,7 +1,7 @@
 import inspect
 from typing import Optional, Any, Dict
 
-from job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
 
 
 def get_input_example(entrypoint: JobEntrypoint, endpoint: str = '/perform') -> Dict[str, Any]:

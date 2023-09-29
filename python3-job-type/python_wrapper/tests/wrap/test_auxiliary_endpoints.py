@@ -1,6 +1,6 @@
 from typing import Callable, Dict
-from job_wrapper.api import create_api_app
-from job_wrapper.health import HealthState
+from racetrack_job_wrapper.api import create_api_app
+from racetrack_job_wrapper.health import HealthState
 from fastapi.testclient import TestClient
 
 

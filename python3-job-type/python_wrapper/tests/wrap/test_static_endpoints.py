@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 
-from job_wrapper.api import create_api_app
-from job_wrapper.entrypoint import JobEntrypoint
-from job_wrapper.health import HealthState
+from racetrack_job_wrapper.api import create_api_app
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.health import HealthState
 
 
 def test_static_endpoints():

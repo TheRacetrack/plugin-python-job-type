@@ -4,7 +4,7 @@ with open("requirements.txt", "r") as fh:
     install_requires = fh.read().splitlines()
 
 setuptools.setup(
-    name="job_wrapper",
+    name="racetrack_job_wrapper",
     version='0.0.1',
     author='ERST',
     packages=setuptools.find_packages(),
@@ -16,7 +16,7 @@ setuptools.setup(
     install_requires=install_requires,
     entry_points={
         "console_scripts": [
-            "job_wrapper = job_wrapper.main:main",
+            "racetrack_job_wrapper = racetrack_job_wrapper.main:main",
         ],
     },
 )

@@ -1,4 +1,4 @@
-from job_wrapper.wrapper import create_entrypoint_app
+from racetrack_job_wrapper.wrapper import create_entrypoint_app
 from fastapi.testclient import TestClient
 
 

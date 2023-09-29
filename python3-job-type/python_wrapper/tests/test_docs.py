@@ -1,9 +1,9 @@
 from typing import Dict, Callable, Any, List
 
-from job_wrapper.docs import get_input_example, get_perform_docs
-from job_wrapper.entrypoint import JobEntrypoint
-from job_wrapper.loader import instantiate_class_entrypoint
-from job_wrapper.validate import validate_entrypoint
+from racetrack_job_wrapper.docs import get_input_example, get_perform_docs
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.loader import instantiate_class_entrypoint
+from racetrack_job_wrapper.validate import validate_entrypoint
 
 
 def test_input_example():
