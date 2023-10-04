@@ -10,7 +10,7 @@ from a2wsgi import WSGIMiddleware
 
 from racetrack_commons.api.asgi.proxy import TrailingSlashForwarder, mount_at_base_path
 from racetrack_client.log.logs import get_logger
-from job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
 
 logger = get_logger(__name__)
 

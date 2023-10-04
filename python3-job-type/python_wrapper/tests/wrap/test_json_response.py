@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from fastapi.testclient import TestClient
 
-from job_wrapper.api import create_api_app
-from job_wrapper.health import HealthState
-from job_wrapper.wrapper import create_entrypoint_app
+from racetrack_job_wrapper.api import create_api_app
+from racetrack_job_wrapper.health import HealthState
+from racetrack_job_wrapper.wrapper import create_entrypoint_app
 from racetrack_client.utils.quantity import Quantity
 
 

@@ -3,7 +3,7 @@ from typing import Dict, Any, Optional
 
 import httpx
 
-from job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
 
 
 def call_job(

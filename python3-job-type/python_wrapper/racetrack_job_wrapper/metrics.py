@@ -4,7 +4,7 @@ from prometheus_client import Counter, Histogram, Gauge
 from prometheus_client.core import REGISTRY
 from prometheus_client.metrics_core import GaugeMetricFamily
 
-from job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
 from racetrack_client.log.logs import get_logger
 
 logger = get_logger(__name__)

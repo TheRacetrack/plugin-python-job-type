@@ -3,7 +3,7 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-from job_wrapper.wrapper import create_entrypoint_app
+from racetrack_job_wrapper.wrapper import create_entrypoint_app
 
 
 @pytest.fixture(scope="function")

@@ -1,5 +1,5 @@
-from job_wrapper.entrypoint import list_entrypoint_parameters
-from job_wrapper.loader import instantiate_class_entrypoint
+from racetrack_job_wrapper.entrypoint import list_entrypoint_parameters
+from racetrack_job_wrapper.loader import instantiate_class_entrypoint
 
 
 def test_wrapped_endpoints():

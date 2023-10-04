@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from job_wrapper.server import run_configured_entrypoint
+from racetrack_job_wrapper.server import run_configured_entrypoint
 from racetrack_client.log.logs import init_logs, configure_logs, get_logger
 
 logger = get_logger(__name__)

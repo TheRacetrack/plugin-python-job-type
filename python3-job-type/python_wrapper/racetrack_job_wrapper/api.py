@@ -9,17 +9,17 @@ from contextvars import ContextVar
 from fastapi import Body, FastAPI, APIRouter, Request, Response
 from fastapi.responses import RedirectResponse
 
-from job_wrapper.webview import setup_webview_endpoints
-from job_wrapper.docs import get_input_example, get_perform_docs
-from job_wrapper.entrypoint import (
+from racetrack_job_wrapper.webview import setup_webview_endpoints
+from racetrack_job_wrapper.docs import get_input_example, get_perform_docs
+from racetrack_job_wrapper.entrypoint import (
     JobEntrypoint,
     perform_entrypoint,
     list_entrypoint_parameters,
     list_auxiliary_endpoints,
     list_static_endpoints,
 )
-from job_wrapper.health import setup_health_endpoints, HealthState
-from job_wrapper.metrics import (
+from racetrack_job_wrapper.health import setup_health_endpoints, HealthState
+from racetrack_job_wrapper.metrics import (
     metric_request_duration,
     metric_request_internal_errors,
     metric_requests_started,
@@ -28,7 +28,7 @@ from job_wrapper.metrics import (
     metric_last_call_timestamp,
     setup_entrypoint_metrics,
 )
-from job_wrapper.response import register_job_json_encoder
+from racetrack_job_wrapper.response import register_job_json_encoder
 from racetrack_client.log.logs import get_logger
 from racetrack_commons.api.asgi.fastapi import create_fastapi
 from racetrack_commons.api.asgi.proxy import mount_at_base_path

@@ -1,7 +1,7 @@
 import pytest
 
-from job_wrapper.entrypoint import JobEntrypoint
-from job_wrapper.validate import validate_entrypoint
+from racetrack_job_wrapper.entrypoint import JobEntrypoint
+from racetrack_job_wrapper.validate import validate_entrypoint
 
 
 def test_docs_input_example_not_serializable():

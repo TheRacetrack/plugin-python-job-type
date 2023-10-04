@@ -1,9 +1,9 @@
 from fastapi.testclient import TestClient
 
-from job_wrapper.health import HealthState
-from job_wrapper.loader import instantiate_class_entrypoint
-from job_wrapper.metrics import metric_requests_started
-from job_wrapper.wrapper import create_api_app
+from racetrack_job_wrapper.health import HealthState
+from racetrack_job_wrapper.loader import instantiate_class_entrypoint
+from racetrack_job_wrapper.metrics import metric_requests_started
+from racetrack_job_wrapper.wrapper import create_api_app
 
 
 def test_metrics_endpoint():

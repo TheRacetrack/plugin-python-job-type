@@ -19,7 +19,7 @@ RUN pip install -r /src/python_wrapper/racetrack_client/requirements.txt \
 
 COPY python_wrapper/racetrack_client/. /src/python_wrapper/racetrack_client/
 COPY python_wrapper/racetrack_commons/. /src/python_wrapper/racetrack_commons/
-COPY python_wrapper/job_wrapper/. /src/python_wrapper/job_wrapper/
+COPY python_wrapper/racetrack_job_wrapper/. /src/python_wrapper/racetrack_job_wrapper/
 RUN cd /src/python_wrapper && python setup.py develop
 
 RUN python -m venv /src/job-venv &&\

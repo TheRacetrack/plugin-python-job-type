@@ -4,10 +4,10 @@ from typing import Optional, Dict, Any
 import yaml
 from fastapi import FastAPI
 
-from job_wrapper.api import create_api_app
-from job_wrapper.health import HealthState
-from job_wrapper.loader import instantiate_class_entrypoint
-from job_wrapper.validate import validate_entrypoint
+from racetrack_job_wrapper.api import create_api_app
+from racetrack_job_wrapper.health import HealthState
+from racetrack_job_wrapper.loader import instantiate_class_entrypoint
+from racetrack_job_wrapper.validate import validate_entrypoint
 
 
 def create_entrypoint_app(
