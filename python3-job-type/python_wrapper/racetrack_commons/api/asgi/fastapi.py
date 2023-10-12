@@ -21,6 +21,7 @@ def create_fastapi(
     handle_errors: bool = True,
     docs_url: str = '/',
 ) -> FastAPI:
+
     fastapi_app = create_fastapi_docs(title, description, base_url, version, authorizations, docs_url)
 
     fastapi_app.add_middleware(
@@ -43,7 +44,7 @@ def create_fastapi(
     fastapi_app.add_middleware(TrailingSlashForwarder)
 
     return fastapi_app
-
+   
 
 def create_fastapi_docs(
     title: str,

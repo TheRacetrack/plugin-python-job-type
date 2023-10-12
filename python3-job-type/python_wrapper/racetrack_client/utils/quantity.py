@@ -43,7 +43,7 @@ class Quantity:
         self.base_number: float = float(match.group('number'))
         self.suffix: str = match.group('suffix')
 
-        if not self.suffix in self._suffix_multipliers:
+        if self.suffix not in self._suffix_multipliers:
             raise ValueError(f'invalid suffix: {self.suffix}, use one of {self._suffix_multipliers.keys()}')
 
     def __str__(self) -> str:
@@ -81,3 +81,22 @@ class Quantity:
     def plain_number(self) -> float:
         """Convert quantity to a plain number without any suffixes"""
         return self.base_number * self._suffix_multipliers[self.suffix]
+
+    @classmethod
+    def __get_validators__(cls):
+        # Needed to make it compatible with pydantic's Custom Data Types
+        # https://docs.pydantic.dev/usage/types/#custom-data-types
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if v is None:
+            return None
+        return Quantity(str(v))
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        # Needed to make it compatible with pydantic's Custom Data Types
+        field_schema.update(
+            examples=["128974848", "129M", "128974848000m", "123Mi", "0.129G"],
+        )

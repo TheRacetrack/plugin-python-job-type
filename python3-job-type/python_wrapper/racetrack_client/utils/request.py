@@ -3,13 +3,15 @@ import ssl
 from email.message import Message
 from http.client import HTTPResponse
 from http.client import responses
-from typing import Any, Optional, Dict
+from typing import Any, List, Optional, Dict, Union
 from urllib import request
 from urllib.error import HTTPError, URLError
 import urllib.parse as urlparse
 from urllib.parse import urlencode
 
 from racetrack_client.log.context_error import ContextError
+
+DEBUG_MODE = False  # print the actual bytes sent in requests and responses
 
 
 class RequestError(ContextError):
@@ -27,13 +29,16 @@ class ResponseError(RequestError):
 
 class Response:
 
-    def __init__(self,
+    def __init__(
+        self,
         url: str,
+        method: str,
         status_code: int,
         content: bytes,
         headers: Message,
     ):
         self._url: str = url
+        self._method: str = method.upper()
         self._status_code: int = status_code
         self._content: bytes = content
         self._headers: Message = headers
@@ -62,7 +67,7 @@ class Response:
     def text(self) -> str:
         return self._content.decode('utf8')
 
-    def json(self) -> Dict:
+    def json(self) -> Union[Dict, List]:
         response_data = self._content.decode('utf8')
         if not response_data:
             raise RuntimeError('no content in response to decode as JSON')
@@ -77,11 +82,19 @@ class Response:
         return self._url
     
     @property
+    def method(self) -> str:
+        return self._method
+    
+    @property
     def headers(self) -> Message:
         return self._headers
     
     def header(self, name: str) -> Optional[str]:
         return self._headers[name]
+
+    @property
+    def error_details(self) -> str:
+        return f'{self.status_code} {self.status_reason} for url: {self.method} {self.url}'
 
 
 class Requests:
@@ -89,69 +102,75 @@ class Requests:
     insecure: bool = True  # whether to verify SSL certificates
 
     @classmethod
-    def get(cls, 
+    def get(
+            cls,
             url: str,
             params: Optional[Dict[str, Any]] = None,
             headers: Optional[Dict[str, str]] = None,
-            timeout: float = None,
-        ) -> Response:
+            timeout: Optional[float] = None,
+            ) -> Response:
         return cls._make_request('GET', url, None, None, params, headers, timeout)
 
     @classmethod
-    def post(cls,
+    def post(
+            cls,
             url: str,
             json: Optional[Any] = None,
             data: Optional[bytes] = None,
             params: Optional[Dict[str, Any]] = None,
             headers: Optional[Dict[str, str]] = None,
-            timeout: float = None,
-        ) -> Response:
+            timeout: Optional[float] = None,
+            ) -> Response:
         return cls._make_request('POST', url, json, data, params, headers, timeout)
 
     @classmethod
-    def put(cls,
+    def put(
+            cls,
             url: str,
             json: Optional[Any] = None,
             data: Optional[bytes] = None,
             params: Optional[Dict[str, Any]] = None,
             headers: Optional[Dict[str, str]] = None,
-            timeout: float = None,
-        ) -> Response:
+            timeout: Optional[float] = None,
+            ) -> Response:
         return cls._make_request('PUT', url, json, data, params, headers, timeout)
 
     @classmethod
-    def delete(cls,
+    def delete(
+            cls,
             url: str,
             json: Optional[Any] = None,
             data: Optional[bytes] = None,
             params: Optional[Dict[str, Any]] = None,
             headers: Optional[Dict[str, str]] = None,
-            timeout: float = None,
-        ) -> Response:
+            timeout: Optional[float] = None,
+            ) -> Response:
         return cls._make_request('DELETE', url, json, data, params, headers, timeout)
 
     @classmethod
-    def request(cls,
+    def request(
+            cls,
             method: str,
             url: str,
             json: Optional[Any] = None,
             data: Optional[bytes] = None,
             params: Optional[Dict[str, Any]] = None,
             headers: Optional[Dict[str, str]] = None,
-            timeout: float = None,
-        ) -> Response:
+            timeout: Optional[float] = None,
+            ) -> Response:
         return cls._make_request(method.upper(), url, json, data, params, headers, timeout)
 
     @classmethod
-    def _make_request(cls, 
+    def _make_request(
+            cls,
             method: str,
             url: str,
             jsondata: Optional[Any] = None,
             data: Optional[bytes] = None,
             params: Optional[Dict[str, Any]] = None,
             headers: Optional[Dict[str, str]] = None,
-            timeout: float = None,
-        ) -> Response:
+            timeout: Optional[float] = None,
+            ) -> Response:
         """
         Make HTTP request and return response object.
         :param method: HTTP method: GET, POST, PUT, DELETE
@@ -190,12 +209,25 @@ class Requests:
         if timeout is not None:
             kwargs['timeout'] = timeout
 
+        if not req.has_header('User-Agent'):
+            req.add_header('User-Agent', 'request')
+
         kwargs['context'] = cls._get_ssl_context()
+
+        if DEBUG_MODE:
+            http_handler = request.HTTPHandler(debuglevel=2)
+            https_handler = request.HTTPSHandler(context=kwargs['context'], debuglevel=2)
+            opener = request.build_opener(http_handler, https_handler)
+            request.install_opener(opener)
+            # Passing 'context' argument to urllib.request.urlopen rebuilds the URL opener,
+            # not giving a chance to turn the debug mode on.
+            del kwargs['context']
 
         try:
             http_response: HTTPResponse = request.urlopen(req, **kwargs)
             return Response(
                 url=url,
+                method=method,
                 status_code=http_response.status,
                 content=http_response.read(),
                 headers=http_response.headers,
@@ -203,6 +235,7 @@ class Requests:
         except HTTPError as e:
             return Response(
                 url=url,
+                method=method,
                 status_code=e.code,
                 content=e.read(),
                 headers=e.headers,
@@ -232,7 +265,7 @@ def build_url_with_params(
     return urlparse.urlunparse(url_parts)
     
 
-def parse_response(response: Response, error_context: str) -> Optional[Dict]:
+def parse_response(response: Response, error_context: str) -> Optional[Union[Dict, List]]:
     """
     Ensure response was successful. If not, try to extract error message from it.
     :return: response parsed as JSON object
@@ -248,17 +281,16 @@ def parse_response(response: Response, error_context: str) -> Optional[Dict]:
     raise "Deployment error: 500 Internal Server Error: you have no power here"
     """
     try:
-        result: Optional[Dict] = None
+        result: Optional[Union[Dict, List]] = None
         if 'application/json' in response.headers['content-type']:
             result = response.json()
 
         if response.ok:
             return result
 
-        if result is not None and 'error' in result:
-            raise RuntimeError(f'{response.status_reason}: {result.get("error")}')
-        response.raise_for_status()
-        return result
+        if result is not None and isinstance(result, dict) and 'error' in result:
+            raise ContextError(response.status_reason, RuntimeError(result.get("error")))
+        raise ResponseError(response.error_details, response.status_code)
     except Exception as e:
         raise ResponseError(error_context, response.status_code) from e
 
@@ -266,16 +298,36 @@ def parse_response(response: Response, error_context: str) -> Optional[Dict]:
 def parse_response_object(response: Response, error_context: str) -> Dict:
     try:
         if 'application/json' not in response.headers['content-type']:
-            raise RuntimeError('expected JSON response')
+            raise RuntimeError(f'expected JSON response, got "{response.headers["content-type"]}", '
+                               f'{response.error_details}')
 
         result = response.json()
 
         if response.ok:
+            assert isinstance(result, dict), f'response JSON expected to be a dictionary, got {type(result)}'
             return result
 
-        if result is not None and 'error' in result:
-            raise RuntimeError(f'{response.status_reason}: {result.get("error")}')
-        response.raise_for_status()
-        return result
+        if result is not None and isinstance(result, dict) and 'error' in result:
+            raise ContextError(response.status_reason, RuntimeError(result.get("error")))
+        raise ResponseError(response.error_details, response.status_code)
+    except Exception as e:
+        raise ResponseError(error_context, response.status_code) from e
+
+
+def parse_response_list(response: Response, error_context: str) -> List:
+    try:
+        if 'application/json' not in response.headers['content-type']:
+            raise RuntimeError(f'expected JSON response, got "{response.headers["content-type"]}", '
+                               f'{response.error_details}')
+
+        result = response.json()
+
+        if response.ok:
+            assert isinstance(result, list), f'response JSON expected to be a list, got {type(result)}'
+            return result
+
+        if result is not None and isinstance(result, dict) and 'error' in result:
+            raise ContextError(response.status_reason, RuntimeError(result.get("error")))
+        raise ResponseError(response.error_details, response.status_code)
     except Exception as e:
         raise ResponseError(error_context, response.status_code) from e
