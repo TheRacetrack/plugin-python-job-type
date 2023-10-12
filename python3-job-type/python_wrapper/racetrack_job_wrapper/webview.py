@@ -50,7 +50,7 @@ def setup_webview_endpoints(
     logger.info(f'Webview app mounted at {webview_base_url}')
 
     @api.get('/webview/{path:path}')
-    def _job_webview_endpoint(path: Optional[str] = fastapi.Path(None)):
+    def _job_webview_endpoint(path: Optional[str]):
         """Call custom Webview UI pages"""
         pass  # just register endpoint in swagger, it's handled by ASGI
 
