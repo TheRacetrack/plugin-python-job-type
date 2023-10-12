@@ -16,7 +16,7 @@ class JobEntrypoint:
         templates = Jinja2Templates(directory="templates")
 
         @app.get('/')
-        async def index(request: Request):
+        def index(request: Request):
             return templates.TemplateResponse("index.html", {
                 "request": request,
                 "base_url": base_url,
