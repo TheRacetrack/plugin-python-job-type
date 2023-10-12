@@ -1,6 +1,6 @@
 from racetrack_commons.api.response import ResponseJSONEncoder, register_response_json_encoder
 
-from pydantic.json import ENCODERS_BY_TYPE
+from fastapi.encoders import ENCODERS_BY_TYPE
 
 
 class JobJSONEncoder(ResponseJSONEncoder):
