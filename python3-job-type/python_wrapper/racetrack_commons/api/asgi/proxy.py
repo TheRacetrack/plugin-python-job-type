@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from starlette.types import ASGIApp, Receive, Scope, Send

@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 from inspect import signature
 
-import fastapi
 from fastapi import APIRouter, FastAPI
 from fastapi.staticfiles import StaticFiles
 from a2wsgi import WSGIMiddleware
