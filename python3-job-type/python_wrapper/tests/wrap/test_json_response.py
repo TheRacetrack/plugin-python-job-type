@@ -59,7 +59,7 @@ def test_serialize_quantity():
 
     response = client.post('/api/v1/perform', json={})
     assert response.status_code == 200
-    assert response.json()[:2] == [
+    assert response.json() == [
         '100Mi',
         {'quantity': '1000m'},
     ]

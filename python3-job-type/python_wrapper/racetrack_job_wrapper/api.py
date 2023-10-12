@@ -95,7 +95,7 @@ def create_api_app(
     fastapi_app.include_router(api_router, prefix="/api/v1")
 
     @fastapi_app.get('/')
-    async def _root_endpoint():
+    def _root_endpoint():
         return RedirectResponse(f"{base_url}{home_page}")
 
     if os.environ.get('OPENTELEMETRY_ENDPOINT'):

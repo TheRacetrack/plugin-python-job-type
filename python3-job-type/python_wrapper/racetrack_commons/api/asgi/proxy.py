@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 from starlette.types import ASGIApp, Receive, Scope, Send
@@ -9,7 +11,7 @@ def mount_at_base_path(api_app: ASGIApp, *base_path_patterns: str) -> FastAPI:
 
     for base_path_pattern in base_path_patterns:
         @wrapper_app.get(base_path_pattern)
-        async def _base_path_redirect(request: Request):
+        def _base_path_redirect(request: Request):
             return RedirectResponse(f"{request.url.path}/")
 
         wrapper_app.mount(base_path_pattern, api_app)

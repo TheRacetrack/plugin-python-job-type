@@ -80,19 +80,19 @@ class HealthState:
 def setup_health_endpoints(api: FastAPI, health_state: HealthState, job_name: str):
 
     @api.get("/health", tags=['root'])
-    async def _health():
+    def _health():
         """Report current aggregated application status"""
         content, status = health_state.health_response(job_name)
         return JSONResponse(content=content, status_code=status)
 
     @api.get("/live", tags=['root'])
-    async def _live():
+    def _live():
         """Report application liveness: whether it has started (but might not be ready yet)"""
         content, status = health_state.live_response()
         return JSONResponse(content=content, status_code=status)
 
     @api.get("/ready", tags=['root'])
-    async def _ready():
+    def _ready():
         """Report application readiness: whether it's available for accepting traffic"""
         content, status = health_state.ready_response()
         return JSONResponse(content=content, status_code=status)
