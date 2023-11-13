@@ -4,6 +4,27 @@ All **user-facing**, notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2023-11-13
+### Added
+- Function `racetrack_job_wrapper.call.call_job_async` allows you to make chain calls inside a job
+  within an `async` context in Python:
+  ```python
+  from racetrack_job_wrapper.call import call_job_async
+  
+  async def do_it_async(self):
+      response = await call_job_async(self, job_name='job_name', path='/api/v1/perform', payload={}, version='latest')
+  ```
+
+## [2.10.0] - 2023-10-12
+### Added
+- New Prometheus metrics coming from `racetrack_commons` module.
+
+### Changed
+- Third-party libraries have been upgraded to newer versions.
+
+### Fixed
+- Better handling of asynchronous calls. It no longer freezes the server.
+  
 ## [2.9.2] - 2023-09-29
 ### Changed
 - Python module `job_wrapper` has been renamed to `racetrack_job_wrapper`.
