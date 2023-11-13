@@ -1,12 +1,9 @@
-name: python-class
+name: python-async
 owner_email: sample@example.com
 jobtype: python3:latest
-version: 0.0.2
-
 git:
   remote: https://github.com/TheRacetrack/plugin-python-job-type
-  directory: sample/python-class
-
+  directory: sample/python-async
 jobtype_extra:
   entrypoint_path: 'entrypoint.py'
-  entrypoint_class: 'AdderModel'
+  entrypoint_class: 'JobEntrypoint'

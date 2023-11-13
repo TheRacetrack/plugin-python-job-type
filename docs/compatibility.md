@@ -9,3 +9,4 @@ This document describes compatibility of the versions of this plugin with the Ra
 | 2.9.1          | `>= 2.19.0`                  |
 | 2.9.2          | `>= 2.19.0`                  |
 | 2.10.0         | `>= 2.19.0`                  |
+| 2.11.0         | `>= 2.19.0`                  |
