@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   async def do_it_async(self):
       response = await call_job_async(self, job_name='job_name', path='/api/v1/perform', payload={}, version='latest')
   ```
+  See [example](../sample/python-chain/entrypoint.py).
 
 ## [2.10.0] - 2023-10-12
 ### Added
