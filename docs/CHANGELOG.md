@@ -4,6 +4,10 @@ All **user-facing**, notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.1] - 2023-11-28
+### Fixed
+- Graceful shutdown on SIGTERM signal
+
 ## [2.11.0] - 2023-11-13
 ### Added
 - Function `racetrack_job_wrapper.call.call_job_async` allows you to make chain calls inside a job
