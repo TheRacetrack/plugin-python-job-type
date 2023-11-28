@@ -26,6 +26,7 @@ RUN python -m venv /src/job-venv &&\
 	. /src/job-venv/bin/activate &&\
 	pip install --upgrade pip setuptools
 
+STOPSIGNAL SIGTERM
 ENV PYTHONPATH "/src/job/:/src/python_wrapper:/usr/local/lib/python39.zip:/usr/local/lib/python3.9:/usr/local/lib/python3.9/site-packages:/src/job-venv/lib/python3.9/site-packages"
 ENV VENV_PACKAGES_PATH "/src/job-venv/lib/python3.9/site-packages"
 LABEL racetrack-component="job"

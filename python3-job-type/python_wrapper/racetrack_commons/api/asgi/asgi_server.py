@@ -26,7 +26,7 @@ HIDDEN_ACCESS_LOGS = {
     'GET /metrics/ 200',
 }
 
-UVICORN_DEBUG_LOGS = False
+UVICORN_ERROR_LOGS = True
 
 
 def serve_asgi_app(
@@ -39,7 +39,14 @@ def serve_asgi_app(
     mode_info = ' in RELOAD mode' if use_reloader else ''
     logger.info(f'Running ASGI server on http://{http_addr}:{http_port}{mode_info}')
     _setup_uvicorn_logs(access_log)
-    uvicorn.run(app=app, host=http_addr, port=http_port, log_level="debug", reload=use_reloader)
+    uvicorn.run(
+        app=app,
+        host=http_addr,
+        port=http_port,
+        log_level="debug",
+        reload=use_reloader,
+        timeout_graceful_shutdown=3,
+    )
 
 
 def serve_asgi_in_background(
@@ -50,7 +57,13 @@ def serve_asgi_in_background(
 ) -> contextlib.AbstractContextManager:
     logger.info(f'Running ASGI server in background on http://{http_addr}:{http_port}')
     _setup_uvicorn_logs(access_log)
-    config = uvicorn.Config(app=app, host=http_addr, port=http_port, log_level="debug")
+    config = uvicorn.Config(
+        app=app,
+        host=http_addr,
+        port=http_port,
+        log_level="debug",
+        timeout_graceful_shutdown=3,
+    )
     return BackgroundServer(config=config).run_in_thread()
 
 
@@ -73,8 +86,8 @@ def _setup_uvicorn_logs(access_log: bool):
         },
     }
 
-    if not UVICORN_DEBUG_LOGS:
-        LOGGING_CONFIG["loggers"]["uvicorn"]["propagate"] = False
+    LOGGING_CONFIG["loggers"]["uvicorn"]["propagate"] = False
+    if not UVICORN_ERROR_LOGS:
         LOGGING_CONFIG["loggers"]["uvicorn.error"]["level"] = 'INFO'
         LOGGING_CONFIG["loggers"]["uvicorn.error"]["propagate"] = False
 
