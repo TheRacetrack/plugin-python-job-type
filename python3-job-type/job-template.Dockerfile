@@ -20,7 +20,7 @@ RUN . /src/job-venv/bin/activate &&\
 COPY . /src/job/
 RUN chmod -R a+rw /src/job/
 
-CMD python -u -m racetrack_job_wrapper run "{{ manifest.get_jobtype_extra().entrypoint_path }}" "{{ manifest.get_jobtype_extra().entrypoint_class }}" < /dev/null
+CMD ["bash", "-c", "python -u -m racetrack_job_wrapper run '{{ manifest.get_jobtype_extra().entrypoint_path }}' '{{ manifest.get_jobtype_extra().entrypoint_class }}'"]
 
 ENV JOB_NAME "{{ manifest.name }}"
 ENV JOB_VERSION "{{ manifest.version }}"
