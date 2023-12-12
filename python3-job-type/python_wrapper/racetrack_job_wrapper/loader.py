@@ -28,10 +28,11 @@ def instantiate_class_entrypoint(entrypoint_path: str, class_name: Optional[str]
         logger.debug(f'Activated Job\'s venv: {venv_sys_path}')
 
     assert Path(entrypoint_path).is_file(), f'{entrypoint_path} file not found'
-    spec = importlib.util.spec_from_file_location("job", entrypoint_path)
+    spec = importlib.util.spec_from_file_location("racetrack_job", entrypoint_path)
     ext_module = importlib.util.module_from_spec(spec)
     loader: Optional[Loader] = spec.loader
     assert loader is not None, 'no module loader'
+    sys.modules[spec.name] = ext_module
     loader.exec_module(ext_module)
 
     if class_name:
@@ -50,7 +51,7 @@ def find_entrypoint_class(ext_module) -> Type[JobEntrypoint]:
     The interface should be implemented implicitly, by implementing required methods.
     """
     class_members = [c[1] for c in inspect.getmembers(ext_module, inspect.isclass)]
-    class_members = [c for c in class_members if c.__module__ == 'job']  # omit classes loaded by imports
+    class_members = [c for c in class_members if c.__module__ == 'racetrack_job']  # omit classes loaded by imports
     assert len(class_members) > 0, 'no class has been found in module'
     assert len(class_members) == 1, 'multiple classes found in a module, the name should be set explicitly.'
     return class_members[0]
