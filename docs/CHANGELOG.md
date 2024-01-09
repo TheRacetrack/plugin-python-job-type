@@ -62,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chain calls to the jobs can be made by importing the `call_job` function from a package provided by the job type plugin
   `from job_wrapper.call import call_job`.
   See the [example](../sample/python-chain/entrypoint.py) and
-  the [function](../python3-job-type/python_wrapper/job_wrapper/call.py) for more details.
+  the [function](../src/python_wrapper/job_wrapper/call.py) for more details.
 
 ## [2.6.2] - 2023-05-18
 ### Added

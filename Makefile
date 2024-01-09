@@ -4,22 +4,23 @@ setup:
 	python3 -m venv venv &&\
 	. venv/bin/activate &&\
 	pip install --upgrade pip setuptools &&\
-	(cd python3-job-type/python_wrapper && make setup)
+	(cd src/python_wrapper && make setup)
 	@echo Activate your venv:
 	@echo . venv/bin/activate
 
 test:
-	(cd python3-job-type/python_wrapper && make test)
+	(cd src/python_wrapper && make test)
 
 test-build-base:
-	cd python3-job-type &&\
+	cd src &&\
 	DOCKER_BUILDKIT=1 docker build \
 		-t racetrack/job-base/python3:latest \
 		-f base.Dockerfile .
 
 bundle:
-	cd python3-job-type &&\
-	racetrack plugin bundle --out=..
+	cd src &&\
+	racetrack plugin bundle --out=.. &&\
+	racetrack plugin bundle --out=.. --out-filename=latest.zip
 
 install:
-	racetrack plugin install *.zip
+	racetrack plugin install latest.zip

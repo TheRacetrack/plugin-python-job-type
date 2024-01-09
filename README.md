@@ -31,5 +31,5 @@ make setup
 
 # Releasing a new version
 1. Make sure you have latest `racetrack` client.
-2. Change the current version in a [plugin-manifest.yaml](./python3-job-type/plugin-manifest.yaml)
+2. Change the current version in a [plugin-manifest.yaml](./src/plugin-manifest.yaml)
 3. Create ZIP plugin: `make bundle`
