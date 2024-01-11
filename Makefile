@@ -11,12 +11,6 @@ setup:
 test:
 	(cd src/python_wrapper && make test)
 
-test-build-base:
-	cd src &&\
-	DOCKER_BUILDKIT=1 docker build \
-		-t racetrack/job-base/python3:latest \
-		-f base.Dockerfile .
-
 bundle:
 	cd src &&\
 	racetrack plugin bundle --out=.. &&\
