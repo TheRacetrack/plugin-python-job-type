@@ -23,4 +23,4 @@ bundle:
 	racetrack plugin bundle --out=.. --out-filename=latest.zip
 
 install:
-	racetrack plugin install latest.zip
+	racetrack plugin install --replace latest.zip
