@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 class Plugin:
     def job_types(self) -> dict[str, list[str]]:
         """
