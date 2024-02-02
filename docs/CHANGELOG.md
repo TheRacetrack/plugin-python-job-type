@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.13.0] - 2024-02-02
 ### Added
-- A job can configure its own logging formatter.
+- A job can configure its own logging formatter, for instance structured logging formatter.
   Check out [python-logging-format sample](../sample/python-logging-format).
 
 ## [2.12.0] - 2024-01-11
