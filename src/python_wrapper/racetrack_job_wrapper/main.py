@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from racetrack_job_wrapper.server import run_configured_entrypoint
-from racetrack_client.log.logs import init_logs, configure_logs, get_logger
+from racetrack_client.log.logs import configure_logs, get_logger
 
 logger = get_logger(__name__)
 
@@ -28,7 +28,6 @@ def main():
 
 def run_entrypoint(args: argparse.Namespace):
     """Load entrypoint class and run it embedded in a HTTP server"""
-    init_logs()
     configure_logs(log_level='debug')
     
     http_port = args.port or 7000
