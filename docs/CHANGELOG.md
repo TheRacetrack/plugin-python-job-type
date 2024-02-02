@@ -4,6 +4,11 @@ All **user-facing**, notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.0] - 2024-02-02
+### Added
+- A job can configure its own logging formatter.
+  Check out [python-logging-format sample](../sample/python-logging-format).
+
 ## [2.12.0] - 2024-01-11
 ### Changed
 - Base Dockerfile has been merged with a job template,
