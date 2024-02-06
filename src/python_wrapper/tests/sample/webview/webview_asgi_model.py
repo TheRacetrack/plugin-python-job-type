@@ -17,7 +17,7 @@ class JobEntrypoint:
 
         @app.get('/')
         def index(request: Request):
-            return templates.TemplateResponse("index.html", {
+            return templates.TemplateResponse(request, "index.html", {
                 "request": request,
                 "base_url": base_url,
             })
