@@ -2,6 +2,7 @@ from typing import Optional, Callable
 import os
 from pathlib import Path
 from inspect import signature
+import re
 
 from fastapi import APIRouter, FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -29,7 +30,7 @@ def setup_webview_endpoints(
     # Determine whether webview app is WSGI or ASGI
     sig = signature(webview_app)
     if len(sig.parameters) == 2:
-        webview_app = PathPrefixerWSGIMiddleware(webview_app, webview_base_url)
+        webview_app = PathPrefixerWSGIMiddleware(webview_app, base_url)
         webview_app = WSGIMiddleware(webview_app)
         logger.debug(f'Webview app recognized as a WSGI app')
     else:
@@ -65,12 +66,28 @@ class PathPrefixerWSGIMiddleware:
     def __init__(self, app, base_path: str):
         self.app = app
         self.base_path = base_path
+        self.prefix_path_regex = re.compile(r'^/pub/job/(.+?)/(.+?)/(.*)$')
+        self.root_path_regex = re.compile(r'^/pub/job/(.+?)/(.+?)$')
 
     def __call__(self, environ, start_response):
         path = environ.get("PATH_INFO", "")
-        if not path.startswith(self.base_path):
-            path = self.base_path + path
+        match_prefix = self.prefix_path_regex.match(path)
+        match_root = self.root_path_regex.match(path)
+        if match_prefix:
+            job_path = match_prefix.group(3)
+            path = f"{self.base_path}/{job_path}"
+            environ['PATH_INFO'] = path
+            environ['REQUEST_URI'] = path
+            environ['RAW_URI'] = path
 
+        elif match_root:
+            path = f"{self.base_path}/"
+            environ['PATH_INFO'] = path
+            environ['REQUEST_URI'] = path
+            environ['RAW_URI'] = path
+
+        elif not path.startswith(self.base_path):
+            path = self.base_path + path
             environ['PATH_INFO'] = path
             environ['REQUEST_URI'] = path
             environ['RAW_URI'] = path

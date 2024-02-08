@@ -1,13 +1,14 @@
 import threading
 from typing import Optional
 
-from racetrack_job_wrapper.api import create_health_app
-from racetrack_job_wrapper.health import HealthState
-from racetrack_job_wrapper.wrapper import create_entrypoint_app
-from racetrack_client.log.exception import short_exception_details
+from racetrack_client.log.context_error import ContextError
+from racetrack_client.log.exception import short_exception_details, log_exception
 from racetrack_client.log.logs import get_logger
 from racetrack_commons.api.asgi.asgi_reloader import ASGIReloader
 from racetrack_commons.api.asgi.asgi_server import serve_asgi_app
+from racetrack_job_wrapper.api import create_health_app
+from racetrack_job_wrapper.health import HealthState
+from racetrack_job_wrapper.wrapper import create_entrypoint_app
 
 logger = get_logger(__name__)
 
@@ -53,9 +54,9 @@ def _late_init(
         app_reloader.mount(fastapi_app)
 
     except BaseException as e:
-        error_message = short_exception_details(e)
-        health_state.set_error(error_message)
-        logger.error(f'Initialization error: {error_message}')
+        error_details = short_exception_details(e)
+        health_state.set_error(error_details)
+        log_exception(ContextError('Initialization error', e))
     else:
         health_state.set_ready()
         logger.info('Server is ready')
