@@ -1,5 +1,9 @@
 from functools import total_ordering
 import re
+from typing import Any
+
+from pydantic import GetCoreSchemaHandler
+from pydantic_core import CoreSchema, core_schema
 
 
 @total_ordering
@@ -16,11 +20,11 @@ class Quantity:
         'u': 1e-6,
         'n': 1e-9,
         'p': 1e-12,
-        'Ei': 1024**6,
-        'Pi': 1024**5,
-        'Ti': 1024**4,
-        'Gi': 1024**3,
-        'Mi': 1024**2,
+        'Ei': 1024 ** 6,
+        'Pi': 1024 ** 5,
+        'Ti': 1024 ** 4,
+        'Gi': 1024 ** 3,
+        'Mi': 1024 ** 2,
         'Ki': 1024,
     }
 
@@ -51,7 +55,7 @@ class Quantity:
 
     def __repr__(self) -> str:
         return self.__str__()
-    
+
     def __bool__(self) -> bool:
         return self.base_number > 0
 
@@ -83,20 +87,13 @@ class Quantity:
         return self.base_number * self._suffix_multipliers[self.suffix]
 
     @classmethod
-    def __get_validators__(cls):
-        # Needed to make it compatible with pydantic's Custom Data Types
-        # https://docs.pydantic.dev/usage/types/#custom-data-types
-        yield cls.validate
+    def __get_pydantic_core_schema__(
+            cls, source_type: Any, handler: GetCoreSchemaHandler
+    ) -> CoreSchema:
+        return core_schema.no_info_after_validator_function(cls.validate, handler(source_type))
 
     @classmethod
     def validate(cls, v):
         if v is None:
             return None
         return Quantity(str(v))
-
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        # Needed to make it compatible with pydantic's Custom Data Types
-        field_schema.update(
-            examples=["128974848", "129M", "128974848000m", "123Mi", "0.129G"],
-        )
