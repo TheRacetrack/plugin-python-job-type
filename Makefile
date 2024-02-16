@@ -8,6 +8,10 @@ setup:
 	@echo Activate your venv:
 	@echo . venv/bin/activate
 
+setup-install:
+	. venv/bin/activate &&\
+	(cd src/python_wrapper && make setup-install)
+
 test:
 	(cd src/python_wrapper && make test)
 

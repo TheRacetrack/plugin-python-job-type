@@ -6,7 +6,10 @@ setup:
 		-r requirements-dev.txt \
 		-r racetrack_client/requirements.txt \
 		-r racetrack_commons/requirements.txt
-	python setup.py develop
+	python -m pip install -e .
+
+setup-install:
+	python -m pip install -e .
 
 test:
 	cd tests && python -m pytest -vv --tb=short -ra $(test)
