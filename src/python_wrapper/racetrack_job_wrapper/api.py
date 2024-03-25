@@ -31,7 +31,7 @@ from racetrack_job_wrapper.metrics import (
     metric_last_call_timestamp,
     setup_entrypoint_metrics,
 )
-from racetrack_job_wrapper.response import register_job_json_encoder
+from racetrack_job_wrapper.response import to_json_serializable
 from racetrack_client.log.logs import get_logger
 from racetrack_commons.api.asgi.fastapi import create_fastapi
 from racetrack_commons.api.asgi.proxy import mount_at_base_path
@@ -95,7 +95,6 @@ def create_api_app(
         response_access_log=True,
         docs_url='/docs',
     )
-    register_job_json_encoder()
 
     setup_health_endpoints(fastapi_app, health_state, job_name)
     setup_entrypoint_metrics(entrypoint)
@@ -213,7 +212,9 @@ def _call_job_endpoint(
         def _endpoint_caller() -> Any:
             return endpoint_method(**payload)
 
-        return options.concurrency_runner(_endpoint_caller)
+        result = options.concurrency_runner(_endpoint_caller)
+        return to_json_serializable(result)
+
     except TypeError as e:
         metric_request_internal_errors.labels(endpoint=endpoint_path).inc()
         raise ValueError(f'failed to call a function: {e}')
