@@ -2,7 +2,7 @@
 "python3" job type is intended to handle the calls to your Python function.
 Racetrack will wrap it up in a web server.
 
-Set `lang: python3:latest` in your `job.yaml` manifest file in order to use this type of job.
+Set `jobtype: python3:latest` in your `job.yaml` manifest file in order to use this type of job.
 
 ## Job standards
 Let's assume you already have your code in a repository at `supersmart/model.py`:
@@ -296,6 +296,15 @@ runtime_env:
 ```
 This will add caller identity (username or ESC name) to every log entry.
 
+### Concurrent requests cap
+Maximum number of concurrent requests can be limited by `max_concurrency` field:
+```yaml
+jobtype_extra:
+  max_concurrency: 1
+```
+By default, concurrent requests are unlimited. Setting `max_concurrency` to `1` will make the job
+process requests one by one. Overdue requests will be queued and processed in order.
+
 ## Summary of principles
 To sum up:
 
@@ -328,16 +337,17 @@ When using `python3` job type, you MUST include the following fields in a `job.y
 
 - `name` - choose a meaningful text name for a job. It should be unique within the Racetrack cluster.
 - `owner_email` - email address of the Job's owner to reach out
-- `lang` - Set base image to "python3"
+- `jobtype` - Set base image to "python3"
 - `git.remote` - URL to your remote repo 
-- `python.entrypoint_path` - Specify relative path to a file with Job Entrypoint class. 
+- `jobtype_extra.entrypoint_path` - Specify relative path to a file with Job Entrypoint class. 
   This file will be imported as a python module when the Job is started. 
   
 You MAY include the following fields:
 
-- `python.requirements_path` - Specify pip requirements.txt location
-- `python.entrypoint_class` - name of Python entrypoint class. 
+- `jobtype_extra.requirements_path` - Specify pip requirements.txt location
+- `jobtype_extra.entrypoint_class` - name of Python entrypoint class. 
   Use it if you want to declare it explicitly. Otherwise, Racetrack will discover that on its own.
+- `jobtype_extra.max_concurrency` (**integer**) - to limit maximum number of concurrent requests.
 
 Check out [The Job Manifest File Schema](https://theracetrack.github.io/racetrack/docs/manifest-schema/) to see all available fields.
 
@@ -345,13 +355,14 @@ The final `job.yaml` may look like this:
 ```yaml
 name: supersmart
 owner_email: nobody@example.com
-lang: python3:latest
+jobtype: python3:latest
 
 git:
   remote: https://github.com/racetrack/supersmart-model
   branch: master
 
-python:
+jobtype_extra:
   requirements_path: 'supersmart/requirements.txt'
   entrypoint_path: 'job_entrypoint.py'
+  max_concurrency: 1
 ```

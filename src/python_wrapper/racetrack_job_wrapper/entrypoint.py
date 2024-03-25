@@ -61,21 +61,6 @@ class JobEntrypoint(ABC):
         return []
 
 
-def perform_entrypoint(entrypoint: JobEntrypoint, payload: Dict[str, Any]) -> Dict:
-    """Call model/service main action"""
-    if entrypoint is None:
-        raise ValueError('undefined entrypoint')
-
-    if not hasattr(entrypoint, 'perform'):
-        raise ValueError("entrypoint doesn't have 'perform' method implemented")
-
-    try:
-        output = entrypoint.perform(**payload)
-    except TypeError as e:
-        raise ValueError(f'failed to call a function: {e}')
-    return output
-
-
 def list_entrypoint_parameters(entrypoint: JobEntrypoint) -> List[Dict]:
     """Inspect entrypoint function and return names, default values, types of all function's parameters"""
     if not hasattr(entrypoint, 'perform'):
