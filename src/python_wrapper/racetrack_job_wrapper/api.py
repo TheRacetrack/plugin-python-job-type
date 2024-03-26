@@ -306,7 +306,7 @@ def jobtype_extra_int(jobtype_extra: Dict[str, Any], field_name: str) -> Optiona
     str_val = jobtype_extra.get(field_name)
     if str_val is None:
         return None
-    assert str_val.isdigit(), f'Expected integer in {field_name}, but got: {str_val}'
+    assert str(str_val).isdigit(), f'Expected integer in {field_name}, but got: {str_val}'
     return int(str_val)
 
 
@@ -320,7 +320,9 @@ def make_concurrency_runner(options: EndpointOptions) -> Callable[[Callable[...,
     def concurrency_wrapper(f: Callable[..., Any]) -> Any:
         queue_size: int = options.active_requests_counter.value - max_concurrency
         if max_concurrency_queue is not None and queue_size >= max_concurrency_queue:
-            raise HTTPException(503, 'too many requests waiting in a queue')  # Service Unavailable
+            # Too Many Requests
+            raise HTTPException(429, f'too many requests waiting in a queue. Job is set to process {max_concurrency}'
+                                     f' requests concurrently with a queue of max size {max_concurrency_queue}')
         try:
             options.active_requests_counter.inc()
             with concurrency_semaphore:

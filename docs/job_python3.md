@@ -297,13 +297,21 @@ runtime_env:
 This will add caller identity (username or ESC name) to every log entry.
 
 ### Concurrent requests cap
-Maximum number of concurrent requests can be limited by `max_concurrency` field:
+Maximum number of concurrent requests can be limited by `jobtype_extra.max_concurrency` field:
+By default, concurrent requests are unlimited. Setting `max_concurrency` to `1` will make the job
+process requests one by one. Overdue requests will be queued and processed in order.
+
+Having such concurrency limits may cause some requests to wait in a queue.
+If a throughput is higher than the job can handle, the queue will grow indefinitely.
+To prevent that, you can set `jobtype_extra.max_concurrency_queue` to limit the queue size.
+When the queue is full, the job will return `429 Too Many Requests` status code.
+
+Example (1 request at a time, with up to 10 requests waiting in a queue):
 ```yaml
 jobtype_extra:
   max_concurrency: 1
+  max_concurrency_queue: 10
 ```
-By default, concurrent requests are unlimited. Setting `max_concurrency` to `1` will make the job
-process requests one by one. Overdue requests will be queued and processed in order.
 
 ## Summary of principles
 To sum up:
@@ -348,6 +356,8 @@ You MAY include the following fields:
 - `jobtype_extra.entrypoint_class` - name of Python entrypoint class. 
   Use it if you want to declare it explicitly. Otherwise, Racetrack will discover that on its own.
 - `jobtype_extra.max_concurrency` (**integer**) - to limit maximum number of concurrent requests.
+- `jobtype_extra.max_concurrency_queue` (**integer**) -
+  to limit maximum number of requests waiting in a queue due to concurrency limits.
 
 Check out [The Job Manifest File Schema](https://theracetrack.github.io/racetrack/docs/manifest-schema/) to see all available fields.
 
@@ -365,4 +375,5 @@ jobtype_extra:
   requirements_path: 'supersmart/requirements.txt'
   entrypoint_path: 'job_entrypoint.py'
   max_concurrency: 1
+  max_concurrency_queue: 10
 ```
