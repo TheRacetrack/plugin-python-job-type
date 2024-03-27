@@ -10,7 +10,6 @@ from pydantic import (
 )
 from typing_extensions import Annotated
 
-
 @total_ordering
 class Quantity:
     _suffix_multipliers = {
@@ -25,11 +24,11 @@ class Quantity:
         'u': 1e-6,
         'n': 1e-9,
         'p': 1e-12,
-        'Ei': 1024 ** 6,
-        'Pi': 1024 ** 5,
-        'Ti': 1024 ** 4,
-        'Gi': 1024 ** 3,
-        'Mi': 1024 ** 2,
+        'Ei': 1024**6,
+        'Pi': 1024**5,
+        'Ti': 1024**4,
+        'Gi': 1024**3,
+        'Mi': 1024**2,
         'Ki': 1024,
     }
 
@@ -60,7 +59,7 @@ class Quantity:
 
     def __repr__(self) -> str:
         return self.__str__()
-
+    
     def __bool__(self) -> bool:
         return self.base_number > 0
 
@@ -93,7 +92,7 @@ class Quantity:
 
     @classmethod
     def __get_pydantic_json_schema__(
-            cls, core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+        cls, core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
     ) -> Dict[str, Any]:
         return {'type': 'string'}
 

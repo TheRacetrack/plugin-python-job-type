@@ -1,30 +1,14 @@
-from racetrack_commons.api.response import ResponseJSONEncoder, register_response_json_encoder
+from typing import Any
 
-from fastapi.encoders import ENCODERS_BY_TYPE
-
-
-class JobJSONEncoder(ResponseJSONEncoder):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        try:
-            import numpy as np
-
-            self.numpy_array = np.ndarray
-        except ModuleNotFoundError:
-            self.numpy_array = None
-
-    def default(self, o):
-        if self.numpy_array is not None and isinstance(o, self.numpy_array):
-            return o.tolist()
-        return super().default(o)
+from racetrack_client.utils.datamodel import convert_to_json_serializable
 
 
-def register_job_json_encoder():
-    register_response_json_encoder()
-
+def to_json_serializable(obj: Any) -> Any:
     try:
         import numpy as np
-        ENCODERS_BY_TYPE[np.ndarray] = lambda o: o.tolist()
+        if isinstance(obj, np.ndarray):
+            return convert_to_json_serializable(obj.tolist())
     except ModuleNotFoundError:
         pass
+
+    return convert_to_json_serializable(obj)
