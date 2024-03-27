@@ -303,7 +303,7 @@ process requests one by one. Overdue requests will be queued and processed in or
 
 Having such concurrency limits may cause some requests to wait in a queue.
 If a throughput is higher than the job can handle, the queue will grow indefinitely.
-To prevent that, you can set `jobtype_extra.max_concurrency_queue` to limit the queue size.
+To prevent that, you can also set `jobtype_extra.max_concurrency_queue` to limit the queue size.
 When the queue is full, the job will return `429 Too Many Requests` status code.
 
 Example (1 request at a time, with up to 10 requests waiting in a queue):
