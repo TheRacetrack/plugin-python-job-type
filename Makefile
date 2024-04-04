@@ -10,7 +10,7 @@ setup:
 
 setup-install:
 	. venv/bin/activate &&\
-	(cd src/python_wrapper && make setup-install)
+	(cd src/python_wrapper && make setup)
 
 test:
 	(cd src/python_wrapper && make test)

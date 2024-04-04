@@ -4,6 +4,23 @@ All **user-facing**, notable changes will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.0] - 2024-03-25
+### Added
+- Maximum number of concurrent requests can be limited by `max_concurrency` field in a manifest:
+  ```yaml
+  jobtype_extra:
+    max_concurrency: 1
+  ```
+  By default, concurrent requests are unlimited. Setting `max_concurrency` to `1` will make the job
+  process requests one by one. Overdue requests will be queued and processed in order.
+
+  Having such concurrency limits may cause some requests to wait in a queue.
+  If an average throughput is higher than the job can handle, the queue will grow indefinitely.
+  To prevent that, you can set `jobtype_extra.max_concurrency_queue` to limit the queue size.
+  When the queue is full, the job will return `429 Too Many Requests` status code.
+
+  See the [Python job type](https://github.com/TheRacetrack/plugin-python-job-type/blob/master/docs/job_python3.md)
+
 ## [2.13.2] - 2024-02-22
 ### Fixed
 - Use ExceptionGroups from Python 3.11 properly.
