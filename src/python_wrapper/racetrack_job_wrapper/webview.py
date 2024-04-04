@@ -30,7 +30,7 @@ def setup_webview_endpoints(
     # Determine whether webview app is WSGI or ASGI
     sig = signature(webview_app)
     if len(sig.parameters) == 2:
-        webview_app = PathPrefixerWSGIMiddleware(webview_app, base_url)
+        webview_app = PathPrefixerWSGIMiddleware(webview_app, webview_base_url)
         webview_app = WSGIMiddleware(webview_app)
         logger.debug(f'Webview app recognized as a WSGI app')
     else:

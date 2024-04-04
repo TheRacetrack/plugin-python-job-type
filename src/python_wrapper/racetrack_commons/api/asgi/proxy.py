@@ -37,3 +37,13 @@ class TrailingSlashForwarder:
     @classmethod
     def mount_path(cls, path: str):
         cls.forwarded_paths.add(path)
+
+
+class DebugASGIRouting:
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        path = scope['path']
+        print(f'ASGI route: {path}')
+        await self.app(scope, receive, send)

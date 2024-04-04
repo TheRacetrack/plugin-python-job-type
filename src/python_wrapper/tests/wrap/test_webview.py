@@ -26,7 +26,7 @@ def test_requesting_webview_wsgi_pages(revert_workdir):
     client = TestClient(api_app)
 
     response = client.get('/pub/job/skynet/0.0.1/api/v1/webview')
-    assert response.status_code == 200, 'webview without a slash is forwarded automatically'
+    assert response.status_code == 200, f'webview without a slash is forwarded automatically, response: {response.text}'
     html = response.text
     assert 'Hello world. Here\'s a webview' in html, 'webview returns HTML'
 
