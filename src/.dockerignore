@@ -8,3 +8,9 @@
 **/*.iml
 **/.idea
 **/.vscode
+
+.git
+
+python_wrapper/tests
+python_wrapper/README.md
+python_wrapper/requirements-dev.txt

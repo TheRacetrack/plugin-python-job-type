@@ -37,7 +37,6 @@ from racetrack_commons.api.asgi.fastapi import create_fastapi
 from racetrack_commons.api.asgi.proxy import mount_at_base_path
 from racetrack_commons.api.metrics import setup_metrics_endpoint
 from racetrack_commons.auth.methods import get_racetrack_authorizations_methods
-from racetrack_commons.telemetry.otlp import setup_opentelemetry
 
 logger = get_logger(__name__)
 
@@ -115,12 +114,6 @@ def create_api_app(
     @fastapi_app.get('/')
     def _root_endpoint():
         return RedirectResponse(f"{base_url}{home_page}")
-
-    if os.environ.get('OPENTELEMETRY_ENDPOINT'):
-        setup_opentelemetry(fastapi_app, os.environ.get('OPENTELEMETRY_ENDPOINT', ''), 'job', {
-            'job_name': job_name,
-            'job_version': job_version,
-        })
 
     return mount_at_base_path(fastapi_app, '/pub/job/{job_name}/{version}', '/pub/fatman/{job_name}/{version}')
 
@@ -294,11 +287,16 @@ def _setup_request_context(entrypoint: JobEntrypoint, fastapi_app: FastAPI):
     request_context: ContextVar[Request] = ContextVar('request_context')
     setattr(entrypoint, 'request_context', request_context)
 
+    request_extra: ContextVar[Dict[str, Any]] = ContextVar('request_extra')
+    setattr(entrypoint, 'request_extra', request_extra)
+
     @fastapi_app.middleware('http')
     async def request_context_middleware(request: Request, call_next) -> Response:
-        request_id = request_context.set(request)
+        request_context_token = request_context.set(request)
+        request_extra_token = request_extra.set({})
         response = await call_next(request)
-        request_context.reset(request_id)
+        request_context.reset(request_context_token)
+        request_extra.reset(request_extra_token)
         return response
 
 
