@@ -3,9 +3,7 @@
 setup:
 	pip install \
 		-r requirements.txt \
-		-r requirements-dev.txt \
-		-r racetrack_client/requirements.txt \
-		-r racetrack_commons/requirements.txt
+		-r requirements-dev.txt
 	python -m pip install -e .
 
 setup-install:
