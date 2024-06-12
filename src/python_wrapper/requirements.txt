@@ -1,5 +1,5 @@
 # racetrack_client
-PyYAML >= 6.0
+PyYAML >= 6.0.1
 pydantic==2.6.1
 # racetrack_commons
 prometheus-client==0.17.1

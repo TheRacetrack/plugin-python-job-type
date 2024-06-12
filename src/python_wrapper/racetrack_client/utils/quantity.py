@@ -10,6 +10,7 @@ from pydantic import (
 )
 from typing_extensions import Annotated
 
+
 @total_ordering
 class Quantity:
     _suffix_multipliers = {
