@@ -44,9 +44,10 @@ RUN mkdir -p /usr/share/man/man1 && apt-get update -y &&\
 {% if manifest_jobtype_extra.requirements_path %}
 COPY "{{ manifest_jobtype_extra.requirements_path }}" /src/job/
 # Install job's requirements in isolated environment
-RUN . /src/job-venv/bin/activate &&\
+RUN --mount=type=secret,id=build_secrets,target=/run/secrets/build_secrets.env \
+    . /src/job-venv/bin/activate &&\
     cd /src/job/ &&\
-    pip install -r "{{ manifest_jobtype_extra.requirements_path }}" &&\
+    env $(cat /run/secrets/build_secrets.env | xargs) pip install -r "{{ manifest_jobtype_extra.requirements_path }}" &&\
     rm -rf /root/.cache/pip
     {%- if manifest_jobtype_extra.get('check_requirements', true) in [true, 'true'] %}
 # check for dependency conflicts
