@@ -1,16 +1,7 @@
 .PHONY: setup test run
 
 setup:
-	pip install \
-		-r requirements.txt \
-		-r requirements-dev.txt
-	python -m pip install -e .
-
-setup-install:
-	python -m pip install -e .
-
-test:
-	cd tests && python -m pytest -vv --tb=short -ra $(test)
+	pip install -r requirements.txt
 
 # Run local server wrapping sample model (outside docker)
 run:
