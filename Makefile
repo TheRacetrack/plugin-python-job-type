@@ -4,13 +4,13 @@ setup:
 	python3 -m venv venv &&\
 	. venv/bin/activate &&\
 	pip install --upgrade pip setuptools &&\
-	(cd src/python_wrapper && make setup)
+	(cd src/python_wrapper && pip install -r requirements.txt)
 	@echo Activate your venv:
 	@echo . venv/bin/activate
 
 setup-install:
 	. venv/bin/activate &&\
-	(cd src/python_wrapper && make setup)
+	(cd src/python_wrapper && pip install -r requirements.txt)
 
 test:
 	(cd src/python_wrapper && make test)
