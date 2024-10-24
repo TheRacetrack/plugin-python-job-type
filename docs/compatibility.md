@@ -17,4 +17,5 @@ This document describes compatibility of the versions of this plugin with the Ra
 | 2.13.2         | `>= 2.26.0`                  |
 | 2.14.0         | `>= 2.26.0`                  |
 | 2.14.5         | `>= 2.30.0`                  |
-| 2.15.0         | `> 2.32.1`                   |
+| 2.15.0         | `>= 2.33.0`                  |
+| 2.15.1         | `>= 2.33.0`                  |

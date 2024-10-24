@@ -25,11 +25,8 @@ RUN python -m venv /src/job-venv &&\
 
 # Include Racetrack job wrapper source code
 WORKDIR /src/job
-COPY --from=jobtype python_wrapper/setup.py python_wrapper/requirements.txt /src/python_wrapper/
+COPY --from=jobtype python_wrapper/requirements.txt /src/python_wrapper/
 RUN pip install -r /src/python_wrapper/requirements.txt && rm -rf /root/.cache/pip
-
-COPY --from=jobtype python_wrapper/. /src/python_wrapper/
-RUN cd /src/python_wrapper && pip install -e .
 
 {% for env_key, env_value in env_vars.items() %}
 ENV {{ env_key }} "{{ env_value }}"
